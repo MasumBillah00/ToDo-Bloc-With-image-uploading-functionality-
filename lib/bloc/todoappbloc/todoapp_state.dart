@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import '../../model/todo_task_model.dart';
 
 enum ListStatus { loading, success, failure }
@@ -22,8 +21,8 @@ class TodoappState extends Equatable {
   }) {
     return TodoappState(
       favouriteItemList: favouriteItemList ?? this.favouriteItemList,
-      listStatus: listStatus ?? this.listStatus,
       tempFavouriteList: tempFavouriteList ?? this.tempFavouriteList,
+      listStatus: listStatus ?? this.listStatus,
     );
   }
 

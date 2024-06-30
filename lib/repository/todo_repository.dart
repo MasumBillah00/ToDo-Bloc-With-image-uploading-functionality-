@@ -1,20 +1,30 @@
 
 
-
+import '../database_helper/database_helper.dart';
 import '../model/todo_task_model.dart';
 
 class ToDoAppRepository {
-  List<TodoTaskModelModel> _favouriteItems = [];
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   Future<List<TodoTaskModelModel>> fetchItems() async {
-    await Future.delayed(Duration(seconds: 3));
-    return List.from(_favouriteItems);
+    final tasksData = await _databaseHelper.queryAllTasks();
+    return tasksData.map((task) => TodoTaskModelModel.fromMap(task)).toList();
   }
 
-  void addItem(TodoTaskModelModel item) {
-    _favouriteItems.add(item);
+  Future<void> addItem(TodoTaskModelModel item) async {
+    await _databaseHelper.insertTask(item.toMap());
+  }
+
+  Future<void> updateItem(TodoTaskModelModel item) async {
+    await _databaseHelper.updateTask(item.toMap());
+  }
+
+  Future<void> deleteItem(String id) async {
+    await _databaseHelper.deleteTask(id);
   }
 }
+
+
 
 
 

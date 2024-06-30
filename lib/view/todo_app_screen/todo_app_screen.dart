@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/view/login_screen/login_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/task_add_screen.dart';
-
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
@@ -84,28 +82,30 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                         title: Text(
                           item.value,
                           style: TextStyle(
-                            decoration: state.tempFavouriteList.contains(item)
-                                ? TextDecoration.none
-                                : TextDecoration.none,
-                            color: state.tempFavouriteList.contains(item)
-                                ? Colors.red
-                                : Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500
+                              decoration: state.tempFavouriteList.contains(item)
+                                  ? TextDecoration.none
+                                  : TextDecoration.none,
+                              color: state.tempFavouriteList.contains(item)
+                                  ? Colors.red
+                                  : Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500
                           ),
                         ),
                         trailing: IconButton(
                           onPressed: () {
-                            context.read<ToDoAppBloc>().add(FavouriteItem(
-                                item: TodoTaskModelModel(
-                                    id: item.id,
-                                    isFavourite: !item.isFavourite,
-                                    value: item.value)));
+                            context.read<ToDoAppBloc>().add(FavouriteItem(item: item
+                            // TodoTaskModelModel(
+                            //   id: item.id,
+                            //   isFavourite: !item.isFavourite,
+                            //   value: item.value
+                            // )
+                            ),
+                            );
                           },
                           icon: Icon(
                             item.isFavourite ? Icons.favorite : Icons.favorite_outline,
-                            size:35 ,
-                              color: Colors.amber[200],
+                            color: Colors.amberAccent,
                           ),
                         ),
                       ),
@@ -118,12 +118,11 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.amber[200],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50)
+              borderRadius: BorderRadius.circular(50)
           ),
           child: Icon(Icons.add,
             color: Colors.black,
             size: 32,
-
           ),
           onPressed: () {
             Navigator.of(context).push(

@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
-
 import '../../model/todo_task_model.dart';
 
 abstract class ToDoAppEvent extends Equatable {
   const ToDoAppEvent();
+
   @override
   List<Object?> get props => [];
 }
@@ -12,6 +12,7 @@ class FetchTaskList extends ToDoAppEvent {}
 
 class AddTaskItem extends ToDoAppEvent {
   final TodoTaskModelModel item;
+
   const AddTaskItem({required this.item});
 
   @override
@@ -20,6 +21,7 @@ class AddTaskItem extends ToDoAppEvent {
 
 class FavouriteItem extends ToDoAppEvent {
   final TodoTaskModelModel item;
+
   const FavouriteItem({required this.item});
 
   @override
@@ -28,6 +30,7 @@ class FavouriteItem extends ToDoAppEvent {
 
 class SelectItem extends ToDoAppEvent {
   final TodoTaskModelModel item;
+
   const SelectItem({required this.item});
 
   @override
@@ -36,6 +39,7 @@ class SelectItem extends ToDoAppEvent {
 
 class UnSelectItem extends ToDoAppEvent {
   final TodoTaskModelModel item;
+
   const UnSelectItem({required this.item});
 
   @override
@@ -43,3 +47,13 @@ class UnSelectItem extends ToDoAppEvent {
 }
 
 class DeleteItem extends ToDoAppEvent {}
+
+class RestoreItem extends ToDoAppEvent {
+  final TodoTaskModelModel item;
+
+  RestoreItem({required this.item});
+
+  @override
+  List<Object?> get props => [item];
+}
+

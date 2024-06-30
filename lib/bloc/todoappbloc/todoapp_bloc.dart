@@ -1,77 +1,81 @@
 import 'package:bloc/bloc.dart';
 import 'package:todoapptask/bloc/todoappbloc/todoapp_event.dart';
 import 'package:todoapptask/bloc/todoappbloc/todoapp_state.dart';
-
 import '../../model/todo_task_model.dart';
 import '../../repository/todo_repository.dart';
 
 class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
-  List<TodoTaskModelModel> taskList = [];
-  List<TodoTaskModelModel> tempFavouriteList = [];
-
-  ToDoAppRepository toDoAppRepository;
+  final ToDoAppRepository toDoAppRepository;
 
   ToDoAppBloc(this.toDoAppRepository) : super(const TodoappState()) {
-    on<FetchTaskList>(fetchList);
+    on<FetchTaskList>(_fetchList);
     on<AddTaskItem>(_handleAddTaskItem);
-    on<FavouriteItem>(_addFavouriteItem);
-    on<DeleteItem>(deleteItem);
-    on<SelectItem>(selectedItem);
-    on<UnSelectItem>(unSelectItem);
+    on<FavouriteItem>(_handleFavouriteItem);
+    on<DeleteItem>(_deleteItem);
+    on<SelectItem>(_selectItem);
+    on<UnSelectItem>(_unSelectItem);
   }
 
-  void selectedItem(SelectItem event, Emitter<TodoappState> emit) async {
-    tempFavouriteList.add(event.item);
-    emit(state.copyWith(tempFavouriteList: List.from(tempFavouriteList)));
+  void _selectItem(SelectItem event, Emitter<TodoappState> emit) async {
+    final updatedList = List<TodoTaskModelModel>.from(state.tempFavouriteList)..add(event.item);
+    emit(state.copyWith(tempFavouriteList: updatedList));
   }
 
-  void unSelectItem(UnSelectItem event, Emitter<TodoappState> emit) async {
-    tempFavouriteList.remove(event.item);
-    emit(state.copyWith(tempFavouriteList: List.from(tempFavouriteList)));
+  void _unSelectItem(UnSelectItem event, Emitter<TodoappState> emit) async {
+    final updatedList = List<TodoTaskModelModel>.from(state.tempFavouriteList)..remove(event.item);
+    emit(state.copyWith(tempFavouriteList: updatedList));
   }
 
-  void fetchList(FetchTaskList event, Emitter<TodoappState> emit) async {
-    taskList = await toDoAppRepository.fetchItems();
-    emit(state.copyWith(
-      favouriteItemList: List.from(taskList),
-      listStatus: ListStatus.success,
-    ));
-  }
 
-  void _addFavouriteItem(FavouriteItem event, Emitter<TodoappState> emit) async {
-    final personIndex = taskList.indexWhere((person) => person.id == event.item.id);
-    if (event.item.isFavourite) {
-      if (tempFavouriteList.contains(taskList[personIndex])) {
-        tempFavouriteList.remove(taskList[personIndex]);
-        tempFavouriteList.add(event.item);
-      }
-    } else {
-      if (tempFavouriteList.contains(taskList[personIndex])) {
-        tempFavouriteList.remove(taskList[personIndex]);
-        tempFavouriteList.add(event.item);
-      }
+  void _fetchList(FetchTaskList event, Emitter<TodoappState> emit) async {
+    try {
+      final taskList = await toDoAppRepository.fetchItems();
+      emit(state.copyWith(
+        favouriteItemList: List.from(taskList),
+        listStatus: ListStatus.success,
+      ));
+    } catch (_) {
+      emit(state.copyWith(listStatus: ListStatus.failure));
     }
-    taskList[personIndex] = event.item;
-    emit(state.copyWith(
-      favouriteItemList: List.from(taskList),
-      tempFavouriteList: List.from(tempFavouriteList),
-    ));
   }
 
-  void deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
-    for (int i = 0; i < tempFavouriteList.length; i++) {
-      taskList.remove(tempFavouriteList[i]);
+  void _handleFavouriteItem(FavouriteItem event, Emitter<TodoappState> emit) async {
+    try {
+      await toDoAppRepository.updateItem(event.item.copyWith(isFavourite: !event.item.isFavourite));
+      final taskList = await toDoAppRepository.fetchItems();
+      emit(state.copyWith(
+        favouriteItemList: List.from(taskList),
+        tempFavouriteList: List.from(state.tempFavouriteList),
+      ));
+    } catch (_) {
+      emit(state.copyWith(listStatus: ListStatus.failure));
     }
-
-    tempFavouriteList.clear();
-    emit(state.copyWith(
-      favouriteItemList: List.from(taskList),
-      tempFavouriteList: List.from(tempFavouriteList),
-    ));
   }
+
+  void _deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
+    try {
+      for (var item in state.tempFavouriteList) {
+        await toDoAppRepository.deleteItem(item.id);
+      }
+      final taskList = await toDoAppRepository.fetchItems();
+      emit(state.copyWith(
+        favouriteItemList: List.from(taskList),
+        tempFavouriteList: [],
+      ));
+    } catch (_) {
+      emit(state.copyWith(listStatus: ListStatus.failure));
+    }
+  }
+
+
 
   void _handleAddTaskItem(AddTaskItem event, Emitter<TodoappState> emit) async {
-    taskList.add(event.item);
-    emit(state.copyWith(favouriteItemList: List.from(taskList)));
+    try {
+      await toDoAppRepository.addItem(event.item);
+      final taskList = await toDoAppRepository.fetchItems();
+      emit(state.copyWith(favouriteItemList: List.from(taskList)));
+    } catch (_) {
+      emit(state.copyWith(listStatus: ListStatus.failure));
+    }
   }
 }

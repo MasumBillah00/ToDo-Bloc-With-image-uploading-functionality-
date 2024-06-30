@@ -3,7 +3,12 @@ part of 'login_bloc.dart';
 enum LoginStatus { initial, loading, success, error }
 
 class LoginState extends Equatable {
-  const LoginState({this.email = '', this.password = '', this.message = '', this.loginStatus = LoginStatus.initial});
+  const LoginState({
+    this.email = '',
+    this.password = '',
+    this.message = '',
+    this.loginStatus = LoginStatus.initial
+  });
 
   final String email;
   final String password;
