@@ -1,64 +1,76 @@
-
-
-import '../database_helper/database_helper.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import '../model/todo_task_model.dart';
 
 class ToDoAppRepository {
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
+  static final ToDoAppRepository _instance = ToDoAppRepository._internal();
+  factory ToDoAppRepository() => _instance;
+  static Database? _database;
 
-  Future<List<TodoTaskModelModel>> fetchItems() async {
-    final tasksData = await _databaseHelper.queryAllTasks();
-    return tasksData.map((task) => TodoTaskModelModel.fromMap(task)).toList();
+  ToDoAppRepository._internal();
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDb();
+    return _database!;
+  }
+
+  Future<Database> _initDb() async {
+    String path = join(await getDatabasesPath(), 'todo_app.db');
+    return openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) {
+        return db.execute(
+          'CREATE TABLE tasks(id TEXT PRIMARY KEY, value TEXT, isDeleting INTEGER, isFavourite INTEGER, isDone INTEGER)',
+        );
+      },
+    );
   }
 
   Future<void> addItem(TodoTaskModelModel item) async {
-    await _databaseHelper.insertTask(item.toMap());
+    final db = await database;
+    await db.insert('tasks', item.toMap());
+  }
+
+  Future<List<TodoTaskModelModel>> fetchItems({bool includeDeleted = false}) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'tasks',
+      where: includeDeleted ? null : 'isDeleting = 0',
+    );
+    return List.generate(maps.length, (i) {
+      return TodoTaskModelModel.fromMap(maps[i]);
+    });
   }
 
   Future<void> updateItem(TodoTaskModelModel item) async {
-    await _databaseHelper.updateTask(item.toMap());
+    final db = await database;
+    await db.update(
+      'tasks',
+      item.toMap(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
   }
 
-  Future<void> deleteItem(String id) async {
-    await _databaseHelper.deleteTask(id);
+  Future<void> hideItem(String id) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      {'isDeleting': 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> restoreItem(String id) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      {'isDeleting': 0},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
-
-
-
-
-
-
-
-//
-//
-// import 'package:blocmultiplestats/model/favourite/favourite_item_model.dart';
-//
-// class FavouriteRepository{Future<List<FavouriteItemModel>>fetchItem()async{
-//   await Future.delayed(Duration(seconds: 3));
-//   return List.of(_generateList(10));
-//  }
-//
-//  List<FavouriteItemModel>_generateList(int length){
-//   return List.generate(length, (index)=> FavouriteItemModel(id: index.toString(), value: 'Item: $index'));
-//  }
-//
-// }
-
-
-// class FavouriteRepository {
-//   final List<FavouriteItemModel> _items = [];
-//
-//   Future<List<FavouriteItemModel>> fetchItem() async {
-//     await Future.delayed(Duration(seconds: 3));
-//     return List.of(_items);
-//   }
-//
-//   void addItem(FavouriteItemModel item) {
-//     _items.add(item);
-//   }
-//
-//   void addItems(List<FavouriteItemModel> items) {
-//     _items.addAll(items);
-//   }
-// }

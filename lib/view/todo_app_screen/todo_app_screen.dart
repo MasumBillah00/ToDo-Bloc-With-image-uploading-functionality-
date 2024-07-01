@@ -7,6 +7,7 @@ import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../../model/todo_task_model.dart';
 import '../todo_app_widget/delete_button_widget.dart';
+import 'deleted_item_screen.dart';
 import 'favoruite_item_screen.dart';
 
 class ToDoAppScreen extends StatefulWidget {
@@ -31,10 +32,10 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     });
 
     if (index == 3) {
-      // Navigate to the FavouriteItemScreen when "Favourite" tab is tapped
+      // Navigate to the HiddenTasksScreen when "RecyleBin" tab is tapped
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const NewLoginScreen(),
+          builder: (context) => HiddenTasksScreen(),
         ),
       );
     }
@@ -53,7 +54,9 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
             ),
           ),
           centerTitle: true,
-          actions: const [DeleteButtonWidget()],
+          actions: const [
+            DeleteButtonWidget(), // Include DeleteButtonWidget here
+          ],
         ),
         body: BlocBuilder<ToDoAppBloc, TodoappState>(
           builder: (context, state) {
@@ -82,31 +85,38 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                         title: Text(
                           item.value,
                           style: TextStyle(
-                              decoration: state.tempFavouriteList.contains(item)
-                                  ? TextDecoration.none
-                                  : TextDecoration.none,
-                              color: state.tempFavouriteList.contains(item)
-                                  ? Colors.red
-                                  : Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500
+                            decoration: state.tempFavouriteList.contains(item)
+                                ? TextDecoration.none
+                                : TextDecoration.none,
+                            color: state.tempFavouriteList.contains(item)
+                                ? Colors.red
+                                : Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            context.read<ToDoAppBloc>().add(FavouriteItem(item: item
-                            // TodoTaskModelModel(
-                            //   id: item.id,
-                            //   isFavourite: !item.isFavourite,
-                            //   value: item.value
-                            // )
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
+                              },
+                              icon: Icon(
+                                item.isFavourite
+                                    ? Icons.favorite
+                                    : Icons.favorite_outline,
+                                color: Colors.amberAccent,
+                                size: 30,
+                              ),
                             ),
-                            );
-                          },
-                          icon: Icon(
-                            item.isFavourite ? Icons.favorite : Icons.favorite_outline,
-                            color: Colors.amberAccent,
-                          ),
+                            IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                context.read<ToDoAppBloc>().add(HideItem(id: item.id, value: item.value));
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -118,9 +128,10 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.amber[200],
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50)
+            borderRadius: BorderRadius.circular(50),
           ),
-          child: Icon(Icons.add,
+          child: Icon(
+            Icons.add,
             color: Colors.black,
             size: 32,
           ),
@@ -148,6 +159,11 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
               icon: Icon(Icons.check_box, color: Colors.amber[200], size: 35),
               activeIcon: Icon(Icons.check_box, color: Colors.amber[600], size: 35),
               label: 'Completed Tasks',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.delete_outline, color: Colors.amber[200], size: 35),
+              activeIcon: Icon(Icons.delete_outline, color: Colors.amber[600], size: 35),
+              label: 'RecyleBin',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.logout, color: Colors.amber[200], size: 35),

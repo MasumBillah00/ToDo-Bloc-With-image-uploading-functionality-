@@ -48,12 +48,25 @@ class UnSelectItem extends ToDoAppEvent {
 
 class DeleteItem extends ToDoAppEvent {}
 
-class RestoreItem extends ToDoAppEvent {
-  final TodoTaskModelModel item;
+class HideItem extends ToDoAppEvent {
+  final String id;
+  final String value;
 
-  RestoreItem({required this.item});
+  const HideItem({required this.id, required this.value});
 
   @override
-  List<Object?> get props => [item];
+  List<Object?> get props => [id];
 }
 
+
+class FetchHiddenTasks extends ToDoAppEvent {}
+
+
+class RestoreItem extends ToDoAppEvent {
+  final String id;
+
+  const RestoreItem({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}

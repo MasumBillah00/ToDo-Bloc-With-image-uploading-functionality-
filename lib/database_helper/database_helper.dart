@@ -2,41 +2,38 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
   static Database? _database;
+  static final DatabaseHelper _instance = DatabaseHelper._privateConstructor();
 
-  DatabaseHelper._internal();
+  DatabaseHelper._privateConstructor();
+
+  factory DatabaseHelper() {
+    return _instance;
+  }
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-    _database = await _initDatabase();
+
+    _database = await initDB();
     return _database!;
   }
 
-  Future<Database> _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'todo.db');
+  Future<Database> initDB() async {
+    String path = join(await getDatabasesPath(), 'todo_database.db');
     return await openDatabase(
       path,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE tasks(
+            id TEXT PRIMARY KEY,
+            value TEXT,
+            isDeleting INTEGER DEFAULT 0,
+            isFavourite INTEGER DEFAULT 0
+          )
+        ''');
+      },
       version: 1,
-      onCreate: _onCreate,
     );
-  }
-
-  Future _onCreate(Database db, int version) async {
-    await db.execute('''
-    CREATE TABLE tasks (
-      id TEXT PRIMARY KEY,
-      value TEXT,
-      isDeleting INTEGER,
-      isFavourite INTEGER
-    )
-    ''');
-  }
-
-  Future<int> insertTask(Map<String, dynamic> row) async {
-    Database db = await database;
-    return await db.insert('tasks', row);
   }
 
   Future<List<Map<String, dynamic>>> queryAllTasks() async {
@@ -44,13 +41,37 @@ class DatabaseHelper {
     return await db.query('tasks');
   }
 
-  Future<int> updateTask(Map<String, dynamic> row) async {
+  Future<Map<String, dynamic>?> queryTask(String id) async {
     Database db = await database;
-    return await db.update('tasks', row, where: 'id = ?', whereArgs: [row['id']]);
+    List<Map<String, dynamic>> result = await db.query(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return result.isNotEmpty ? result.first : null;
   }
 
-  Future<int> deleteTask(String id) async {
+  Future<void> insertTask(Map<String, dynamic> task) async {
     Database db = await database;
-    return await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
+    await db.insert('tasks', task, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> updateTask(Map<String, dynamic> task) async {
+    Database db = await database;
+    await db.update(
+      'tasks',
+      task,
+      where: 'id = ?',
+      whereArgs: [task['id']],
+    );
+  }
+
+  Future<void> deleteTask(String id) async {
+    Database db = await database;
+    await db.delete(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
