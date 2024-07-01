@@ -91,7 +91,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             color: state.tempFavouriteList.contains(item)
                                 ? Colors.red
                                 : Colors.white,
-                            fontSize: 25,
+                            fontSize: 35,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -107,11 +107,12 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                                     ? Icons.favorite
                                     : Icons.favorite_outline,
                                 color: Colors.amberAccent,
-                                size: 30,
+                                size: 35,
                               ),
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
+                              icon: Icon(Icons.delete, color: Colors.red,
+                              size: 35,),
                               onPressed: () {
                                 context.read<ToDoAppBloc>().add(HideItem(id: item.id, value: item.value));
                               },
