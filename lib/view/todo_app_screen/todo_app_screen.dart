@@ -7,6 +7,7 @@ import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../../model/todo_task_model.dart';
 import '../todo_app_widget/delete_button_widget.dart';
+import '../todo_app_widget/drawer_widget.dart';
 import 'deleted_item_screen.dart';
 import 'favoruite_item_screen.dart';
 
@@ -35,7 +36,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
       // Navigate to the HiddenTasksScreen when "RecyleBin" tab is tapped
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => HiddenTasksScreen(),
+          builder: (context) => NewLoginScreen(),
         ),
       );
     }
@@ -58,6 +59,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
             DeleteButtonWidget(), // Include DeleteButtonWidget here
           ],
         ),
+        drawer: ToDo_Drawer(),
         body: BlocBuilder<ToDoAppBloc, TodoappState>(
           builder: (context, state) {
             switch (state.listStatus) {
@@ -91,7 +93,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             color: state.tempFavouriteList.contains(item)
                                 ? Colors.red
                                 : Colors.white,
-                            fontSize: 35,
+                            fontSize: 25,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -161,11 +163,11 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
               activeIcon: Icon(Icons.check_box, color: Colors.amber[600], size: 35),
               label: 'Completed Tasks',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.delete_outline, color: Colors.amber[200], size: 35),
-              activeIcon: Icon(Icons.delete_outline, color: Colors.amber[600], size: 35),
-              label: 'RecyleBin',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.delete_outline, color: Colors.amber[200], size: 35),
+            //   activeIcon: Icon(Icons.delete_outline, color: Colors.amber[600], size: 35),
+            //   label: 'RecyleBin',
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.logout, color: Colors.amber[200], size: 35),
               activeIcon: Icon(Icons.logout, color: Colors.amber[600], size: 35),
@@ -180,3 +182,4 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     );
   }
 }
+
