@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 
 import '../todo_app_screen/deleted_item_screen.dart';
 
@@ -39,7 +40,11 @@ class ToDo_Drawer extends StatelessWidget {
                 ),
                 ),
                 onTap: () {
-                  Navigator.pop(context); // Close the drawer
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ToDoAppScreen(),
+                    ),
+                  );
                   // Navigate to home screen or handle logic here
                 },
               ),
@@ -63,7 +68,7 @@ class ToDo_Drawer extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => HiddenTasksScreen(),
+                      builder: (context) => const DeletedItemScreen(),
                     ),
                   );
                   // Navigate to favourite screen or handle logic here

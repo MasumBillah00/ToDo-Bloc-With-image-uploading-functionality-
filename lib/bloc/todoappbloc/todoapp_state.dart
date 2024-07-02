@@ -4,32 +4,32 @@ import '../../model/todo_task_model.dart';
 enum ListStatus { loading, success, failure }
 
 class TodoappState extends Equatable {
-  final List<TodoTaskModelModel> favouriteItemList;
+  final List<TodoTaskModelModel> taskItemList;
   final List<TodoTaskModelModel> hiddenTaskList; // Added hiddenTaskList
-  final List<TodoTaskModelModel> tempFavouriteList;
+  final List<TodoTaskModelModel> FavouriteList;
   final ListStatus listStatus;
 
   const TodoappState({
-    this.favouriteItemList = const [],
+    this.taskItemList = const [],
     this.hiddenTaskList = const [], // Initialized hiddenTaskList
     this.listStatus = ListStatus.loading,
-    this.tempFavouriteList = const [],
+    this.FavouriteList = const [],
   });
 
   TodoappState copyWith({
-    List<TodoTaskModelModel>? favouriteItemList,
+    List<TodoTaskModelModel>? taskItemList,
     List<TodoTaskModelModel>? hiddenTaskList, // Added hiddenTaskList in copyWith
     ListStatus? listStatus,
-    List<TodoTaskModelModel>? tempFavouriteList,
+    List<TodoTaskModelModel>? FavouriteList,
   }) {
     return TodoappState(
-      favouriteItemList: favouriteItemList ?? this.favouriteItemList,
+      taskItemList: taskItemList ?? this.taskItemList,
       hiddenTaskList: hiddenTaskList ?? this.hiddenTaskList, // Updated copyWith
-      tempFavouriteList: tempFavouriteList ?? this.tempFavouriteList,
+      FavouriteList: FavouriteList ?? this.FavouriteList,
       listStatus: listStatus ?? this.listStatus,
     );
   }
 
   @override
-  List<Object?> get props => [favouriteItemList, hiddenTaskList, listStatus, tempFavouriteList]; // Added hiddenTaskList in props
+  List<Object?> get props => [taskItemList, hiddenTaskList, listStatus, FavouriteList]; // Added hiddenTaskList in props
 }

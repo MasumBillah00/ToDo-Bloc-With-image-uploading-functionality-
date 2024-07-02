@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../model/todo_task_model.dart';
+import '../todo_app_widget/button_widget.dart';
 
 class TaskAddScreen extends StatefulWidget {
   const TaskAddScreen({super.key});
@@ -75,33 +76,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  final taskValue = _controller.text;
-                  if (taskValue.isNotEmpty) {
-                    final newTask = TodoTaskModelModel(
-                      id: DateTime.now().toString(),
-                      value: taskValue,
-                    );
-                    context.read<ToDoAppBloc>().add(AddTaskItem(item: newTask));
-                    Navigator.pop(context);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.amber, // Text color
-                  shadowColor: Colors.amberAccent, // Shadow color
-                  elevation: 5, // Elevation
-                  padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // Rounded corners
-                  ),
-                  textStyle:const TextStyle(
-                    fontSize: 20, // Text size
-                    fontWeight: FontWeight.w600, // Text weight
-                  ),
-                ),
-                child:const Text('Add Task',),
-              ),
+              AddTaskButton(controller: _controller),
 
             ],
           ),
@@ -110,3 +85,4 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     );
   }
 }
+

@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
+import '../todo_app_widget/drawer_widget.dart';
 
 
 
 
-class HiddenTasksScreen extends StatelessWidget {
+class DeletedItemScreen extends StatelessWidget {
+  const DeletedItemScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,10 +22,12 @@ class HiddenTasksScreen extends StatelessWidget {
             'Recycle Bin',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 35,
+              fontSize: 30,
             ),
           ),
+          centerTitle: true,
         ),
+        drawer:const ToDo_Drawer(),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
           child: BlocBuilder<ToDoAppBloc, TodoappState>(
@@ -39,7 +44,7 @@ class HiddenTasksScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final task = state.hiddenTaskList[index];
                     return Card(
-                      color: Colors.grey[600], // Dark background color
+                      color: Colors.grey[800], // Dark background color
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -49,7 +54,7 @@ class HiddenTasksScreen extends StatelessWidget {
                           task.value,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 30,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -59,7 +64,7 @@ class HiddenTasksScreen extends StatelessWidget {
                             IconButton(
                               icon: const Icon(
                                 Icons.restore_from_trash,
-                                size: 45,
+                                size: 30,
                                 color: Colors.white, // Change restore button color
                               ),
                               onPressed: () {
@@ -72,7 +77,7 @@ class HiddenTasksScreen extends StatelessWidget {
                             IconButton(
                               icon: const Icon(
                                 Icons.delete_forever,
-                                size: 35,
+                                size: 30,
                                 color: Colors.red,
                               ),
                               onPressed: () {
@@ -99,7 +104,7 @@ class HiddenTasksScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirm Deletion'),
-          content: const Text('Are you sure you want to delete this task permanently?'),
+          content: const Text('Are you sure you want to delete permanently?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
