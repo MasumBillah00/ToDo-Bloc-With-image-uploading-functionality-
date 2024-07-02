@@ -5,11 +5,9 @@ import 'package:todoapptask/view/todo_app_screen/task_add_screen.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
-import '../../model/todo_task_model.dart';
 import '../todo_app_widget/delete_button_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
-import 'deleted_item_screen.dart';
-import 'favoruite_item_screen.dart';
+
 
 class ToDoAppScreen extends StatefulWidget {
   const ToDoAppScreen({Key? key}) : super(key: key);
@@ -36,7 +34,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
       // Navigate to the HiddenTasksScreen when "RecyleBin" tab is tapped
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => NewLoginScreen(),
+          builder: (context) =>const NewLoginScreen(),
         ),
       );
     }
@@ -47,7 +45,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title:const Text(
             'TODO APP',
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -59,14 +57,14 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
             DeleteButtonWidget(), // Include DeleteButtonWidget here
           ],
         ),
-        drawer: ToDo_Drawer(),
+        drawer:const ToDo_Drawer(),
         body: BlocBuilder<ToDoAppBloc, TodoappState>(
           builder: (context, state) {
             switch (state.listStatus) {
               case ListStatus.loading:
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               case ListStatus.failure:
-                return Center(child: Text('Something went wrong'));
+                return const Center(child: Text('Something went wrong'));
               case ListStatus.success:
                 return ListView.builder(
                   itemCount: state.favouriteItemList.length,
@@ -113,7 +111,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                               ),
                             ),
                             IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red,
+                              icon:const Icon(Icons.delete, color: Colors.red,
                               size: 35,),
                               onPressed: () {
                                 context.read<ToDoAppBloc>().add(HideItem(id: item.id, value: item.value));
@@ -133,7 +131,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
-          child: Icon(
+          child:const Icon(
             Icons.add,
             color: Colors.black,
             size: 32,

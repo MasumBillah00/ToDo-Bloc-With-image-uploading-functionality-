@@ -17,7 +17,7 @@ class DeleteButtonWidget extends StatelessWidget {
         return Visibility(
             visible: state.tempFavouriteList.isNotEmpty ?  true : false ,
             child: IconButton(onPressed: () {
-              context.read<ToDoAppBloc>().add(DeleteItem());
+              context.read<ToDoAppBloc>().add(DeleteItem(id: ''));
             },
                 icon: const Icon(
                   Icons.delete_outline ,

@@ -46,7 +46,16 @@ class UnSelectItem extends ToDoAppEvent {
   List<Object?> get props => [item];
 }
 
-class DeleteItem extends ToDoAppEvent {}
+
+
+class DeleteItem extends ToDoAppEvent {
+  final String id;
+  const DeleteItem({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 
 class HideItem extends ToDoAppEvent {
   final String id;

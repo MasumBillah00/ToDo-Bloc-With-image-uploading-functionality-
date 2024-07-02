@@ -59,15 +59,29 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
+  // void _deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
+  //   try {
+  //     for (var item in state.tempFavouriteList) {
+  //       await toDoAppRepository.hideItem(item.id);
+  //     }
+  //     final taskList = await toDoAppRepository.fetchItems();
+  //     emit(state.copyWith(
+  //       favouriteItemList: List.from(taskList),
+  //       tempFavouriteList: [],
+  //     ));
+  //   } catch (_) {
+  //     emit(state.copyWith(listStatus: ListStatus.failure));
+  //   }
+  // }
   void _deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
     try {
-      for (var item in state.tempFavouriteList) {
-        await toDoAppRepository.hideItem(item.id);
-      }
-      final taskList = await toDoAppRepository.fetchItems();
+      await toDoAppRepository.deleteItemPermanently(event.id);
+      final taskList = await toDoAppRepository.fetchItems(includeDeleted: true);
+      final filteredHiddenTasks = taskList.where((task) => task.isDeleting).toList();
+
       emit(state.copyWith(
         favouriteItemList: List.from(taskList),
-        tempFavouriteList: [],
+        hiddenTaskList: List.from(filteredHiddenTasks),
       ));
     } catch (_) {
       emit(state.copyWith(listStatus: ListStatus.failure));
@@ -113,9 +127,9 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
   void _fetchHiddenTasks(FetchHiddenTasks event, Emitter<TodoappState> emit) async {
     try {
       final hiddenTaskList = await toDoAppRepository.fetchItems(includeDeleted: true);
-      print('Hidden Task List fetched: $hiddenTaskList');
+      //print('Hidden Task List fetched: $hiddenTaskList');
       final filteredHiddenTasks = hiddenTaskList.where((task) => task.isDeleting).toList();
-      print('Filtered Hidden Tasks: $filteredHiddenTasks');
+      //print('Filtered Hidden Tasks: $filteredHiddenTasks');
       emit(state.copyWith(
         hiddenTaskList: List.from(filteredHiddenTasks),
         listStatus: ListStatus.success,

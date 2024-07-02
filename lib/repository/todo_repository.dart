@@ -64,6 +64,15 @@ class ToDoAppRepository {
     );
   }
 
+  Future<void> deleteItemPermanently(String id) async {
+    final db = await database;
+    await db.delete(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   Future<void> restoreItem(String id) async {
     final db = await database;
     await db.update(

@@ -26,7 +26,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Add Task'),
+          title:const Text('Add Task'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -70,11 +70,11 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                     color: Colors.amber.shade200,
                   ),
                 ),
-                style: TextStyle(
+                style:const TextStyle(
                   color: Colors.white,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   final taskValue = _controller.text;
@@ -91,16 +91,16 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                   foregroundColor: Colors.amber, // Text color
                   shadowColor: Colors.amberAccent, // Shadow color
                   elevation: 5, // Elevation
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding
+                  padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30), // Rounded corners
                   ),
-                  textStyle: TextStyle(
+                  textStyle:const TextStyle(
                     fontSize: 20, // Text size
                     fontWeight: FontWeight.w600, // Text weight
                   ),
                 ),
-                child: Text('Add Task',),
+                child:const Text('Add Task',),
               ),
 
             ],
