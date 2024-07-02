@@ -46,13 +46,13 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         ),
       );
     }
-    if (index == 1) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const FavouriteScreen(),
-        ),
-      );
-    }
+    // if (index == 1) {
+    //   Navigator.of(context).push(
+    //     MaterialPageRoute(
+    //       builder: (context) => const FavouriteScreen(),
+    //     ),
+    //   );
+    // }
   }
 
   @override
