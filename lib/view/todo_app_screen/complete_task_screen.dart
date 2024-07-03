@@ -12,7 +12,7 @@ class CompleteTasksScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Selected Tasks',style: TextStyle(
+          title: const Text('Finished Task',style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w600,
           ),),

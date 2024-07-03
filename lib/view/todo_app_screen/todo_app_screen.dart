@@ -30,38 +30,33 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
       _selectedIndex = index;
     });
 
-    final List<Widget> _screens = [
-      const ToDoAppScreen(),
-      const FavouriteScreen(),
-      const CompleteTasksScreen(),
-      const NewLoginScreen(),
-    ];
 
-    // if (index == 0) {
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (context) => const ToDoAppScreen(),
-    //     ),
-    //   );
-    // } else if (index == 1) {
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (context) => const FavouriteScreen(),
-    //     ),
-    //   );
-    // } else if (index == 2) {
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (context) => const CompleteTasksScreen(),
-    //     ),
-    //   );
-    // } else if (index == 3) {
-    //   Navigator.of(context).push(
-    //     MaterialPageRoute(
-    //       builder: (context) => const NewLoginScreen(),
-    //     ),
-    //   );
-    // }
+
+     if (index == 0) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const ToDoAppScreen(),
+        ),
+      );
+    } else if (index == 1) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const FavouriteScreen(),
+        ),
+      );
+    } else if (index == 2) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const CompleteTasksScreen(),
+        ),
+      );
+    } else if (index == 3) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const NewLoginScreen(),
+        ),
+      );
+    }
   }
 
   @override

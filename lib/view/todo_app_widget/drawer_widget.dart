@@ -18,13 +18,14 @@ class ToDo_Drawer extends StatelessWidget {
         child: Container(
           color: Colors.white.withOpacity(.12),
           child: ListView(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.only(right: 10,top: 8,),
             children: <Widget>[
                SizedBox(
-                height: 100,
+                height: 90,
                 child: DrawerHeader(
                   decoration: BoxDecoration(
                     color: Colors.amber[900],
+                    borderRadius: BorderRadius.circular(13)
                   ),
                   child: const Text(
                     'ToDo App',
