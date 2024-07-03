@@ -1,25 +1,25 @@
 import 'package:equatable/equatable.dart';
 
-class TodoTaskModelModel extends Equatable {
+class TodoTaskModel extends Equatable {
   final String id;
   final String value;
   final bool isDeleting;
   final bool isFavourite;
 
-  const TodoTaskModelModel({
+  const TodoTaskModel({
     required this.id,
     required this.value,
     this.isDeleting = false,
     this.isFavourite = false,
   });
 
-  TodoTaskModelModel copyWith({
+  TodoTaskModel copyWith({
     String? id,
     String? value,
     bool? isDeleting,
     bool? isFavourite,
   }) {
-    return TodoTaskModelModel(
+    return TodoTaskModel(
       id: id ?? this.id,
       value: value ?? this.value,
       isDeleting: isDeleting ?? this.isDeleting,
@@ -27,8 +27,8 @@ class TodoTaskModelModel extends Equatable {
     );
   }
 
-  factory TodoTaskModelModel.fromMap(Map<String, dynamic> map) {
-    return TodoTaskModelModel(
+  factory TodoTaskModel.fromMap(Map<String, dynamic> map) {
+    return TodoTaskModel(
       id: map['id'],
       value: map['value'],
       isDeleting: map['isDeleting'] == 1,

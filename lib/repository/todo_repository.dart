@@ -28,23 +28,23 @@ class ToDoAppRepository {
     );
   }
 
-  Future<void> addItem(TodoTaskModelModel item) async {
+  Future<void> addItem(TodoTaskModel item) async {
     final db = await database;
     await db.insert('tasks', item.toMap());
   }
 
-  Future<List<TodoTaskModelModel>> fetchItems({bool includeDeleted = false}) async {
+  Future<List<TodoTaskModel>> fetchItems({bool includeDeleted = false}) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       'tasks',
       where: includeDeleted ? null : 'isDeleting = 0',
     );
     return List.generate(maps.length, (i) {
-      return TodoTaskModelModel.fromMap(maps[i]);
+      return TodoTaskModel.fromMap(maps[i]);
     });
   }
 
-  Future<void> updateItem(TodoTaskModelModel item) async {
+  Future<void> updateItem(TodoTaskModel item) async {
     final db = await database;
     await db.update(
       'tasks',

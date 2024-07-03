@@ -51,7 +51,7 @@ class AddTaskButton extends StatelessWidget {
       onPressed: () {
         final taskValue = _controller.text;
         if (taskValue.isNotEmpty) {
-          final newTask = TodoTaskModelModel(
+          final newTask = TodoTaskModel(
             id: DateTime.now().toString(),
             value: taskValue,
           );

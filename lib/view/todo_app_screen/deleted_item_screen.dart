@@ -37,7 +37,7 @@ class DeletedItemScreen extends StatelessWidget {
               } else if (state.listStatus == ListStatus.failure) {
                 return const Center(child: Text('Failed to load tasks'));
               } else if (state.hiddenTaskList.isEmpty) {
-                return const Center(child: Text('No hidden tasks'));
+                return const Center(child: Text('Empty RecycleBin'));
               } else {
                 return ListView.builder(
                   itemCount: state.hiddenTaskList.length,

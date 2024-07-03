@@ -11,7 +11,7 @@ abstract class ToDoAppEvent extends Equatable {
 class FetchTaskList extends ToDoAppEvent {}
 
 class AddTaskItem extends ToDoAppEvent {
-  final TodoTaskModelModel item;
+  final TodoTaskModel item;
 
   const AddTaskItem({required this.item});
 
@@ -20,7 +20,7 @@ class AddTaskItem extends ToDoAppEvent {
 }
 
 class FavouriteItem extends ToDoAppEvent {
-  final TodoTaskModelModel item;
+  final TodoTaskModel item;
 
   const FavouriteItem({required this.item});
 
@@ -29,7 +29,7 @@ class FavouriteItem extends ToDoAppEvent {
 }
 
 class SelectItem extends ToDoAppEvent {
-  final TodoTaskModelModel item;
+  final TodoTaskModel item;
 
   const SelectItem({required this.item});
 
@@ -38,7 +38,7 @@ class SelectItem extends ToDoAppEvent {
 }
 
 class UnSelectItem extends ToDoAppEvent {
-  final TodoTaskModelModel item;
+  final TodoTaskModel item;
 
   const UnSelectItem({required this.item});
 

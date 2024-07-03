@@ -33,6 +33,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextField(
                 controller: _controller,
@@ -77,6 +78,9 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
               ),
               const SizedBox(height: 20),
               AddTaskButton(controller: _controller),
+
+
+
 
             ],
           ),
