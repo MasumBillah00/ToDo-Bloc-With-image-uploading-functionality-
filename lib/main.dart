@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
-import 'package:todoapptask/view/login_screen/login_screen.dart';
-import 'package:todoapptask/view/todo_app_screen/home_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import 'bloc/todoappbloc/todoapp_bloc.dart';
 
