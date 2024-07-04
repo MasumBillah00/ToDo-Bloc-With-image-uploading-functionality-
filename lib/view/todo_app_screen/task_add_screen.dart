@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../bloc/todoappbloc/todoapp_bloc.dart';
-import '../../bloc/todoappbloc/todoapp_event.dart';
-import '../../model/todo_task_model.dart';
 import '../todo_app_widget/button_widget.dart';
 
 class TaskAddScreen extends StatefulWidget {
@@ -27,7 +22,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title:const Text('Add Task'),
+          title: const Text('Add Task'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -72,16 +67,12 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                     color: Colors.amber.shade200,
                   ),
                 ),
-                style:const TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               ),
               const SizedBox(height: 20),
               AddTaskButton(controller: _controller),
-
-
-
-
             ],
           ),
         ),
@@ -89,4 +80,3 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     );
   }
 }
-

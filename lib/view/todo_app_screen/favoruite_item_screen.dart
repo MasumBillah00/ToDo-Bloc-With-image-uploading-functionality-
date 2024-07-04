@@ -5,7 +5,11 @@ import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class FavouriteScreen extends StatelessWidget {
-  const FavouriteScreen({super.key});
+ // const FavouriteScreen({super.key});
+  final ValueChanged<int> onItemTapped;
+
+  const FavouriteScreen({super.key, required this.onItemTapped});
+
 
   @override
   Widget build(BuildContext context) {
@@ -15,19 +19,18 @@ class FavouriteScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text(
-              'Favorite Items',
+              'Favorite Item',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
                 fontSize: 30,
+                fontWeight: FontWeight.w600,
               ),
             ),
             centerTitle: true,
           ),
-
-
-          drawer:const ToDo_Drawer(),
+          drawer:  ToDo_Drawer(onItemTapped: onItemTapped),
           body: Padding(
-            padding: const EdgeInsets.only(top: 10,right: 10,left: 10),
+
+            padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
             child: BlocBuilder<ToDoAppBloc, TodoappState>(
               builder: (context, state) {
                 if (state.listStatus == ListStatus.loading) {
@@ -63,7 +66,6 @@ class FavouriteScreen extends StatelessWidget {
                 }
               },
             ),
-
           ),
         ),
       ),

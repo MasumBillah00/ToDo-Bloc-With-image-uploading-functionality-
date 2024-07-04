@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
-
-
-
 class DeletedItemScreen extends StatelessWidget {
-  const DeletedItemScreen({super.key});
+  //const DeletedItemScreen({super.key});
+  final ValueChanged<int> onItemTapped;
+
+  const DeletedItemScreen({super.key, required this.onItemTapped});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+      padding: const EdgeInsets.all(8),
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -27,9 +26,9 @@ class DeletedItemScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        drawer:const ToDo_Drawer(),
+        drawer:  ToDo_Drawer(onItemTapped: onItemTapped,),
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+          padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
           child: BlocBuilder<ToDoAppBloc, TodoappState>(
             builder: (context, state) {
               if (state.listStatus == ListStatus.loading) {
@@ -44,7 +43,7 @@ class DeletedItemScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final task = state.hiddenTaskList[index];
                     return Card(
-                      color: Colors.grey[800], // Dark background color
+                      color: Colors.grey[800],
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -54,7 +53,7 @@ class DeletedItemScreen extends StatelessWidget {
                           task.value,
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -68,9 +67,7 @@ class DeletedItemScreen extends StatelessWidget {
                                 color: Colors.white, // Change restore button color
                               ),
                               onPressed: () {
-                                context
-                                    .read<ToDoAppBloc>()
-                                    .add(RestoreItem(id: task.id));
+                                context.read<ToDoAppBloc>().add(RestoreItem(id: task.id));
                               },
                             ),
                             const SizedBox(width: 8), // Add spacing between buttons
@@ -81,8 +78,7 @@ class DeletedItemScreen extends StatelessWidget {
                                 color: Colors.red,
                               ),
                               onPressed: () {
-                                _showDeleteConfirmationDialog(
-                                    context, task.id);
+                                _showDeleteConfirmationDialog(context, task.id);
                               },
                             ),
                           ],
@@ -98,6 +94,7 @@ class DeletedItemScreen extends StatelessWidget {
       ),
     );
   }
+
   void _showDeleteConfirmationDialog(BuildContext context, String taskId) {
     showDialog(
       context: context,
@@ -125,6 +122,3 @@ class DeletedItemScreen extends StatelessWidget {
     );
   }
 }
-
-
-

@@ -1,3 +1,5 @@
+// todoapp_bloc.dart
+
 import 'package:bloc/bloc.dart';
 import 'package:todoapptask/bloc/todoappbloc/todoapp_event.dart';
 import 'package:todoapptask/bloc/todoappbloc/todoapp_state.dart';
@@ -58,21 +60,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-  // void _handleFavouriteItem(FavouriteItem event, Emitter<TodoappState> emit) async {
-  //   try {
-  //     await toDoAppRepository.updateItem(event.item.copyWith(isFavourite: !event.item.isFavourite));
-  //     final taskList = await toDoAppRepository.fetchItems();
-  //     emit(state.copyWith(
-  //       taskItemList: List.from(taskList),
-  //       favouriteList: taskList.where((item) => item.isFavourite).toList(),
-  //     ));
-  //   } catch (_) {
-  //     emit(state.copyWith(listStatus: ListStatus.failure));
-  //   }
-  // }
-
-
-
   void _deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
     try {
       await toDoAppRepository.deleteItemPermanently(event.id);
@@ -88,8 +75,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-
-
   void _hideItem(HideItem event, Emitter<TodoappState> emit) async {
     try {
       await toDoAppRepository.hideItem(event.id);
@@ -100,25 +85,23 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
         orElse: () => TodoTaskModel(id: event.id, value: event.value, isFavourite: false, isDeleting: true),
       );
 
+      final updatedSelectedList = List<TodoTaskModel>.from(state.selectedList)
+        ..removeWhere((item) => item.id == event.id);
+
       emit(state.copyWith(
         taskItemList: List.from(taskList),
         hiddenTaskList: List.from(state.hiddenTaskList)..add(hiddenItem),
+        selectedList: updatedSelectedList,
       ));
     } catch (_) {
       emit(state.copyWith(listStatus: ListStatus.failure));
     }
   }
 
-
-
-
-
   void _fetchHiddenTasks(FetchHiddenTasks event, Emitter<TodoappState> emit) async {
     try {
       final hiddenTaskList = await toDoAppRepository.fetchItems(includeDeleted: true);
-      //print('Hidden Task List fetched: $hiddenTaskList');
       final filteredHiddenTasks = hiddenTaskList.where((task) => task.isDeleting).toList();
-      //print('Filtered Hidden Tasks: $filteredHiddenTasks');
       emit(state.copyWith(
         hiddenTaskList: List.from(filteredHiddenTasks),
         listStatus: ListStatus.success,
@@ -127,8 +110,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
       emit(state.copyWith(listStatus: ListStatus.failure));
     }
   }
-
-
 
   void _restoreItem(RestoreItem event, Emitter<TodoappState> emit) async {
     try {
@@ -143,15 +124,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-  // void _selectItem(SelectItem event, Emitter<TodoappState> emit) async {
-  //   final updatedList = List<TodoTaskModelModel>.from(state.selectedList)..add(event.item);
-  //   emit(state.copyWith(selectedList: updatedList));
-  // }
-  //
-  // void _unSelectItem(UnSelectItem event, Emitter<TodoappState> emit) async {
-  //   final updatedList = List<TodoTaskModelModel>.from(state.selectedList)..remove(event.item);
-  //   emit(state.copyWith(selectedList: updatedList));
-  // }
   void _selectItem(SelectItem event, Emitter<TodoappState> emit) async {
     final updatedList = List<TodoTaskModel>.from(state.selectedList)..add(event.item);
     emit(state.copyWith(selectedList: updatedList));

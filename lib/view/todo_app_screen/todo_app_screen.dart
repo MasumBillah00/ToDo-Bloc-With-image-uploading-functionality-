@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/view/login_screen/login_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/complete_task_screen.dart';
+import 'package:todoapptask/view/todo_app_screen/deleted_item_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/favoruite_item_screen.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
@@ -29,33 +30,93 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
 
+  Widget _getBody() {
+    switch (_selectedIndex) {
+      case 1:
+        return  FavouriteScreen(onItemTapped:_onItemTapped,);
+      case 2:
+        return  CompleteTasksScreen(onItemTapped:_onItemTapped);
+      case 3:
+        return  DeletedItemScreen(onItemTapped:_onItemTapped);
+      case 4:
+        return const NewLoginScreen();
+      default:
+        return BlocBuilder<ToDoAppBloc, TodoappState>(
+          builder: (context, state) {
+            switch (state.listStatus) {
+              case ListStatus.loading:
+                return const Center(child: CircularProgressIndicator());
+              case ListStatus.failure:
+                return const Center(child: Text('Something went wrong'));
+              case ListStatus.success:
+                return ListView.builder(
+                  itemCount: state.taskItemList.length,
+                  itemBuilder: (context, index) {
+                    final item = state.taskItemList[index];
+                    final isSelected = state.selectedList.contains(item);
 
-
-     if (index == 0) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const ToDoAppScreen(),
-        ),
-      );
-    } else if (index == 1) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const FavouriteScreen(),
-        ),
-      );
-    } else if (index == 2) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const CompleteTasksScreen(),
-        ),
-      );
-    } else if (index == 3) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const NewLoginScreen(),
-        ),
-      );
+                    return Card(
+                      color: Colors.grey[900], // Dark background color
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        leading: Checkbox(
+                          value: isSelected,
+                          onChanged: (bool? value) {
+                            if (value == true) {
+                              context.read<ToDoAppBloc>().add(SelectItem(item: item));
+                            } else {
+                              context.read<ToDoAppBloc>().add(UnSelectItem(item: item));
+                            }
+                          },
+                        ),
+                        title: Text(
+                          item.value,
+                          style: TextStyle(
+                            color: isSelected ? Colors.red : Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
+                              },
+                              icon: Icon(
+                                item.isFavourite ? Icons.favorite : Icons.favorite_outline,
+                                color: Colors.amberAccent,
+                                size: 30,
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                _showHideConfirmationDialog(context, item.id, item.value);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              default:
+                return const Center(child: CircularProgressIndicator());
+            }
+          },
+        );
     }
   }
 
@@ -63,95 +124,24 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.only(left: 12, right: 12),
+        padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'TODO APP',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 30,
-              ),
-            ),
-            centerTitle: true,
-          ),
-          drawer: const ToDo_Drawer(),
-          body: BlocBuilder<ToDoAppBloc, TodoappState>(
-            builder: (context, state) {
-              switch (state.listStatus) {
-                case ListStatus.loading:
-                  return const Center(child: CircularProgressIndicator());
-                case ListStatus.failure:
-                  return const Center(child: Text('Something went wrong'));
-                case ListStatus.success:
-                  return ListView.builder(
-                    itemCount: state.taskItemList.length,
-                    itemBuilder: (context, index) {
-                      final item = state.taskItemList[index];
-                      final isSelected = state.selectedList.contains(item);
-
-
-                      return Card(
-                        color: Colors.grey[900], // Dark background color
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          leading: Checkbox(
-                            value: isSelected,
-                            onChanged: (bool? value) {
-                              if (value == true) {
-                                context.read<ToDoAppBloc>().add(SelectItem(item: item));
-                              } else {
-                                context.read<ToDoAppBloc>().add(UnSelectItem(item: item));
-                              }
-                            },
-                          ),
-                          title: Text(
-                            item.value,
-                            style: TextStyle(
-                              color: isSelected ? Colors.red : Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
-                                },
-                                icon: Icon(
-                                  item.isFavourite ? Icons.favorite : Icons.favorite_outline,
-                                  color: Colors.amberAccent,
-                                  size: 30,
-                                ),
-                              ),
-                              const SizedBox(width: 15),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                  size: 30,
-                                ),
-                                onPressed: () {
-                                  _showHideConfirmationDialog(context, item.id, item.value);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-              }
-            },
-          ),
-
-
+          appBar: _selectedIndex == 0
+              ? AppBar(
+                  title: const Text(
+                    'TODO APP',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 30,
+                    ),
+                  ),
+                  centerTitle: true,
+                )
+              : null,
+          drawer:  ToDo_Drawer(onItemTapped: _onItemTapped),
+          body: _getBody(),
           floatingActionButton: const FloatingActionButtonWidget(),
+
           bottomNavigationBar: BottomNavigationBar(
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(

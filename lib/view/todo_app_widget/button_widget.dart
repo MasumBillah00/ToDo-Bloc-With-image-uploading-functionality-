@@ -1,9 +1,7 @@
 
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../model/todo_task_model.dart';
@@ -21,7 +19,7 @@ class FloatingActionButtonWidget extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(50),
       ),
-      child:const Icon(
+      child: const Icon(
         Icons.add,
         color: Colors.black,
         size: 32,
@@ -63,16 +61,18 @@ class AddTaskButton extends StatelessWidget {
         foregroundColor: Colors.amber, // Text color
         shadowColor: Colors.amberAccent, // Shadow color
         elevation: 5, // Elevation
-        padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30), // Rounded corners
         ),
-        textStyle:const TextStyle(
+        textStyle: const TextStyle(
           fontSize: 20, // Text size
           fontWeight: FontWeight.w600, // Text weight
         ),
       ),
-      child:const Text('Add Task',),
+      child: const Text(
+        'Add Task',
+      ),
     );
   }
 }

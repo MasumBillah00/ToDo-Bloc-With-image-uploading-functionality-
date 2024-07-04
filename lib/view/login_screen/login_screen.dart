@@ -4,7 +4,6 @@ import '../../bloc/login/login_bloc.dart';
 import '../todo_app_screen/home_screen.dart';
 import '../todo_app_screen/todo_app_screen.dart';
 
-
 class NewLoginScreen extends StatefulWidget {
   const NewLoginScreen({Key? key}) : super(key: key);
 
@@ -43,7 +42,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
             if (state.loginStatus == LoginStatus.success) {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => ToDoAppScreen()),
+                MaterialPageRoute(builder: (context) => const ToDoAppScreen()),
               );
             } else if (state.loginStatus == LoginStatus.error) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -83,7 +82,9 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           focusNode: emailFocusNode,
                           onChanged: (value) {
-                            _loginBloc.add(EmailChanged(email: value));
+                            _loginBloc.add(
+                              EmailChanged(email: value),
+                            );
                           },
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -114,7 +115,9 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           focusNode: passwordFocusNode,
                           obscureText: true,
                           onChanged: (value) {
-                            _loginBloc.add(PasswordChanged(password: value));
+                            _loginBloc.add(
+                              PasswordChanged(password: value),
+                            );
                           },
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -152,20 +155,22 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           ),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              _loginBloc.add(LoginApi());
+                              _loginBloc.add(
+                                LoginApi(),
+                              );
                             }
                           },
                           child: state.loginStatus == LoginStatus.loading
                               ? const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                )
                               : const Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                       ],
                     ),
