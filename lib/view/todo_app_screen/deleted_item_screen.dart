@@ -6,6 +6,7 @@ import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../component/allert_dialog.dart';
 import '../component/icon_button_widget.dart';
+import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class DeletedItemScreen extends StatelessWidget {
@@ -51,15 +52,11 @@ class DeletedItemScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: ListTile(
-                        title: Text(
-                          task.value,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
+                        child: ListTile(
+                          title: CustomText(
+                            text: task.value,
                           ),
-                        ),
+
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [

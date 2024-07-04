@@ -10,6 +10,7 @@ import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../component/allert_dialog.dart';
 import '../component/icon_button_widget.dart';
 import '../todo_app_widget/button_widget.dart';
+import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class ToDoAppScreen extends StatefulWidget {
@@ -76,14 +77,10 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             }
                           },
                         ),
-                        title: Text(
-                          item.value,
-                          style: TextStyle(
-                            color: isSelected ? Colors.red : Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
+                          title: CustomText(
+                            text: item.value,
+                            isSelected: isSelected,
                           ),
-                        ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

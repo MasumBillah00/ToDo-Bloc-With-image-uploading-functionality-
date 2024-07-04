@@ -46,7 +46,23 @@ class FavouriteScreen extends StatelessWidget {
                     itemCount: state.favouriteList.length,
                     itemBuilder: (context, index) {
                       final item = state.favouriteList[index];
-                      return Card_Widget(item: item);
+                      return Card(
+                        color: Colors.grey[800],
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            item.value,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   );
                 }

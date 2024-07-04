@@ -6,6 +6,7 @@ import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../component/allert_dialog.dart';
 import '../component/icon_button_widget.dart';
+import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class CompleteTasksScreen extends StatelessWidget {
@@ -48,13 +49,8 @@ class CompleteTasksScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: ListTile(
-                        title: Text(
-                          item.value,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        title: CustomText(
+                          text: item.value,
                         ),
                         trailing: CustomIconButton(
                           icon: Icons.delete,
