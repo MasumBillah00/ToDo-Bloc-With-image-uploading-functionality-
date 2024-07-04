@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapptask/view/constant.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
+import '../component/allert_dialog.dart';
+import '../component/icon_button_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class CompleteTasksScreen extends StatelessWidget {
@@ -53,16 +56,15 @@ class CompleteTasksScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                            size: 30,
-                          ),
+                        trailing: CustomIconButton(
+                          icon: Icons.delete,
+                         // size: 30,
+                          color: AppColors.deleteColor,
                           onPressed: () {
-                            _showDeleteConfirmationDialog(context, item.id, item.value);
+                            _showHideConfirmationDialog(context, item.id, item.value);
                           },
                         ),
+
                       ),
                     );
                   },
@@ -75,30 +77,17 @@ class CompleteTasksScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteConfirmationDialog(BuildContext context, String taskId, String taskValue) {
-    showDialog(
+  void _showHideConfirmationDialog(BuildContext context, String taskId, String taskValue) {
+    showConfirmationDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue));
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
+      title: 'Confirm Delete',
+      content: 'Are you sure you want to delete?',
+      onConfirm: () {
+        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue));
       },
     );
   }
 }
+
+
+

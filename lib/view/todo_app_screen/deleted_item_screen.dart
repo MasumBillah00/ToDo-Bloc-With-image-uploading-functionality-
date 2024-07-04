@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapptask/model/todo_task_model.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
+import '../component/allert_dialog.dart';
+import '../component/icon_button_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class DeletedItemScreen extends StatelessWidget {
@@ -60,29 +63,25 @@ class DeletedItemScreen extends StatelessWidget {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.restore_from_trash,
-                                size: 30,
-                                color: Colors.white, // Change restore button color
-                              ),
+                            CustomIconButton(
+                              icon: Icons.restore_from_trash,
+                              //size: 30,
+                              color: Colors.white,
                               onPressed: () {
                                 context.read<ToDoAppBloc>().add(RestoreItem(id: task.id));
                               },
                             ),
-                            const SizedBox(width: 8), // Add spacing between buttons
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete_forever,
-                                size: 30,
-                                color: Colors.red,
-                              ),
+                            const SizedBox(width: 8),
+                            CustomIconButton(
+                              icon: Icons.delete_forever,
+                              //size: 30,
+                              color: Colors.red,
                               onPressed: () {
                                 _showDeleteConfirmationDialog(context, task.id);
                               },
                             ),
                           ],
-                        ),
+                        )
                       ),
                     );
                   },
@@ -95,30 +94,17 @@ class DeletedItemScreen extends StatelessWidget {
     );
   }
 
+
+
   void _showDeleteConfirmationDialog(BuildContext context, String taskId) {
-    showDialog(
+    showConfirmationDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Deletion'),
-          content: const Text('Are you sure you want to delete permanently?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<ToDoAppBloc>().add(DeleteItem(id: taskId));
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
+      title: 'Confirm Deletion',
+      content: 'Are you sure you want to delete permanently?',
+      onConfirm: () {
+        context.read<ToDoAppBloc>().add(DeleteItem(id: taskId));
       },
     );
   }
+
 }

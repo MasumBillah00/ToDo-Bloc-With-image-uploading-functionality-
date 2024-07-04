@@ -7,6 +7,8 @@ import 'package:todoapptask/view/todo_app_screen/favoruite_item_screen.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
+import '../component/allert_dialog.dart';
+import '../component/icon_button_widget.dart';
 import '../todo_app_widget/button_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
@@ -82,32 +84,31 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
-                              },
-                              icon: Icon(
-                                item.isFavourite ? Icons.favorite : Icons.favorite_outline,
-                                color: Colors.amberAccent,
-                                size: 30,
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
+                                },
+                                icon: Icon(
+                                  item.isFavourite ? Icons.favorite : Icons.favorite_outline,
+                                  color: Colors.amberAccent,
+                                  size: 30,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 15),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete,
+                              const SizedBox(width: 15),
+                              CustomIconButton(
+                                icon: Icons.delete,
+                                //size: 30,
                                 color: Colors.red,
-                                size: 30,
+                                onPressed: () {
+                                  _showHideConfirmationDialog(context, item.id, item.value);
+                                },
                               ),
-                              onPressed: () {
-                                _showHideConfirmationDialog(context, item.id, item.value);
-                              },
-                            ),
-                          ],
-                        ),
+                            ],
+                          )
+
                       ),
                     );
                   },
@@ -175,29 +176,14 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
   }
 
   void _showHideConfirmationDialog(BuildContext context, String taskId, String taskValue) {
-    showDialog(
+    showConfirmationDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue));
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
+      title: 'Confirm Delete',
+      content: 'Are you sure you want to delete?',
+      onConfirm: () {
+        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue));
       },
     );
   }
+
 }
