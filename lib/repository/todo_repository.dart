@@ -1,22 +1,31 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import '../database_helper/database_helper.dart';
 import '../model/todo_task_model.dart';
 
-
 class ToDoAppRepository {
-  final TodoDatabaseHelper databaseHelper; // Instance of TodoDatabaseHelper
+  final TodoDatabaseHelper databaseHelper;
 
-  ToDoAppRepository(this.databaseHelper); // Constructor to initialize the helper
+  ToDoAppRepository(this.databaseHelper);
 
   Future<void> addItem(TodoTaskModel item) async {
-    await databaseHelper.insertTask({
-      'id': item.id,
-      'value': item.value,
-      'description': item.description,
-      'isDeleting': item.isDeleting ? 1 : 0,
-      'isFavourite': item.isFavourite ? 1 : 0,
-    });
+    try {
+      // Check if a task with the same title already exists
+      final existingTask = await databaseHelper.queryTask(item.id);
+      if (existingTask != null) {
+        throw Exception('Task with title "${item.value}" already exists.');
+      }
+
+      // If no existing task, proceed with insertion
+      await databaseHelper.insertTask({
+        'id': item.id,
+        'value': item.value,
+        'description': item.description,
+        'isDeleting': item.isDeleting ? 1 : 0,
+        'isFavourite': item.isFavourite ? 1 : 0,
+      });
+    } catch (e) {
+      // Handle exceptions (e.g., duplicate title) based on your app's needs
+      rethrow; // Optionally handle or log the exception
+    }
   }
 
   Future<List<TodoTaskModel>> fetchItems({bool includeDeleted = false}) async {
@@ -51,6 +60,7 @@ class ToDoAppRepository {
       whereArgs: [id],
     );
   }
+
 
   Future<void> deleteItemPermanently(String id) async {
     final db = await databaseHelper.database;

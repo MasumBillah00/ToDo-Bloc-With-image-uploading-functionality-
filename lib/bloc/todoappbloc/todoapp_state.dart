@@ -9,6 +9,7 @@ class TodoappState extends Equatable {
   final List<TodoTaskModel> favouriteList;
   final List<TodoTaskModel> selectedList;
   final ListStatus listStatus;
+  final String errorMessage;
 
   const TodoappState({
     this.taskItemList = const [],
@@ -16,6 +17,7 @@ class TodoappState extends Equatable {
     this.favouriteList = const [],
     this.selectedList = const [],
     this.listStatus = ListStatus.loading,
+    this.errorMessage = '',
   });
 
   TodoappState copyWith({
@@ -24,6 +26,7 @@ class TodoappState extends Equatable {
     List<TodoTaskModel>? favouriteList,
     List<TodoTaskModel>? selectedList,
     ListStatus? listStatus,
+    String? errorMessage,
   }) {
     return TodoappState(
       taskItemList: taskItemList ?? this.taskItemList,
@@ -31,9 +34,17 @@ class TodoappState extends Equatable {
       favouriteList: favouriteList ?? this.favouriteList,
       selectedList: selectedList ?? this.selectedList,
       listStatus: listStatus ?? this.listStatus,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [taskItemList, hiddenTaskList, favouriteList, selectedList, listStatus];
+  List<Object?> get props => [
+    taskItemList,
+    hiddenTaskList,
+    favouriteList,
+    selectedList,
+    listStatus,
+    errorMessage,
+  ];
 }

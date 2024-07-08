@@ -82,8 +82,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                           text: item.value,
                           isSelected: isSelected,
                         ),
-
-
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -111,9 +109,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                           text: item.description,
                           isSelected: isSelected,
                         ),
-
                       ),
-
                     );
                   },
                 );
@@ -125,7 +121,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -134,20 +129,33 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         child: Scaffold(
           appBar: _selectedIndex == 0
               ? AppBar(
-                  title: const Text(
-                    'TODO APP',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 30,
-                    ),
-                  ),
-                  centerTitle: true,
-                )
+            title: const Text(
+              'TODO APP',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 30,
+              ),
+            ),
+            centerTitle: true,
+          )
               : null,
           drawer:  ToDo_Drawer(onItemTapped: _onItemTapped),
-          body: _getBody(),
+          body: BlocConsumer<ToDoAppBloc, TodoappState>(
+            listener: (context, state) {
+              if (state.listStatus == ListStatus.failure && state.errorMessage.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.errorMessage),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return _getBody();
+            },
+          ),
           floatingActionButton: const FloatingActionButtonWidget(),
-
           bottomNavigationBar: BottomNavigationBar(
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -190,5 +198,4 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
       },
     );
   }
-
 }

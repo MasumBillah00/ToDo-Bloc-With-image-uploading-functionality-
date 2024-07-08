@@ -1,5 +1,5 @@
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class TodoDatabaseHelper {
   static final TodoDatabaseHelper _instance = TodoDatabaseHelper._internal();
@@ -26,26 +26,22 @@ class TodoDatabaseHelper {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    await db.execute(
-        '''
+    await db.execute('''
       CREATE TABLE tasks(
         id TEXT PRIMARY KEY,
-        value TEXT,
+        value TEXT UNIQUE,        
         description TEXT,
         isDeleting INTEGER,
         isFavourite INTEGER
       )
-      '''
-    );
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      await db.execute(
-          '''
+      await db.execute('''
         ALTER TABLE tasks ADD COLUMN description TEXT
-        '''
-      );
+      ''');
     }
   }
 
