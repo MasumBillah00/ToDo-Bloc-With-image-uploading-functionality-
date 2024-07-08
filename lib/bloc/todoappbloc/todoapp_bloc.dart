@@ -1,5 +1,3 @@
-// todoapp_bloc.dart
-
 import 'package:bloc/bloc.dart';
 import 'package:todoapptask/bloc/todoappbloc/todoapp_event.dart';
 import 'package:todoapptask/bloc/todoappbloc/todoapp_state.dart';
@@ -82,7 +80,13 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
       final taskList = await toDoAppRepository.fetchItems();
       final hiddenItem = taskList.firstWhere(
             (item) => item.id == event.id,
-        orElse: () => TodoTaskModel(id: event.id, value: event.value, isFavourite: false, isDeleting: true),
+        orElse: () => TodoTaskModel(
+          id: event.id,
+          value: event.value,
+          description: event.description, // Handle description
+          isFavourite: false,
+          isDeleting: true,
+        ),
       );
 
       final updatedSelectedList = List<TodoTaskModel>.from(state.selectedList)

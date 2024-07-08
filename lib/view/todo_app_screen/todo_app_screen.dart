@@ -35,14 +35,15 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     });
   }
 
+  @override
   Widget _getBody() {
     switch (_selectedIndex) {
       case 1:
-        return  FavouriteScreen(onItemTapped:_onItemTapped,);
+        return FavouriteScreen(onItemTapped: _onItemTapped);
       case 2:
-        return  CompleteTasksScreen(onItemTapped:_onItemTapped);
+        return CompleteTasksScreen(onItemTapped: _onItemTapped);
       case 3:
-        return  DeletedItemScreen(onItemTapped:_onItemTapped);
+        return DeletedItemScreen(onItemTapped: _onItemTapped);
       case 4:
         return const NewLoginScreen();
       default:
@@ -61,7 +62,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                     final isSelected = state.selectedList.contains(item);
 
                     return Card(
-                      color: Colors.grey[900], // Dark background color
+                      color: Colors.grey[900],
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -77,36 +78,42 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             }
                           },
                         ),
-                          title: CustomText(
-                            text: item.value,
-                            isSelected: isSelected,
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
-                                },
-                                icon: Icon(
-                                  item.isFavourite ? Icons.favorite : Icons.favorite_outline,
-                                  color: Colors.amberAccent,
-                                  size: 30,
-                                ),
+                        title: CustomText(
+                          text: item.value,
+                          isSelected: isSelected,
+                        ),
+
+
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                context.read<ToDoAppBloc>().add(FavouriteItem(item: item));
+                              },
+                              icon: Icon(
+                                item.isFavourite ? Icons.favorite : Icons.favorite_outline,
+                                color: Colors.amberAccent,
+                                size: 30,
                               ),
-                              const SizedBox(width: 15),
-                              CustomIconButton(
-                                icon: Icons.delete,
-                                //size: 30,
-                                color: Colors.red,
-                                onPressed: () {
-                                  _showHideConfirmationDialog(context, item.id, item.value);
-                                },
-                              ),
-                            ],
-                          )
+                            ),
+                            const SizedBox(width: 15),
+                            CustomIconButton(
+                              icon: Icons.delete,
+                              color: Colors.red,
+                              onPressed: () {
+                                _showHideConfirmationDialog(context, item.id, item.value);
+                              },
+                            ),
+                          ],
+                        ),
+                        subtitle: DCustomText( // Display the description
+                          text: item.description,
+                          isSelected: isSelected,
+                        ),
 
                       ),
+
                     );
                   },
                 );
@@ -117,6 +124,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -158,9 +166,9 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                 label: 'Completed Tasks',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.logout, color: Colors.amber[200], size: 35),
-                activeIcon: Icon(Icons.logout, color: Colors.amber[600], size: 35),
-                label: 'Logout',
+                icon: Icon(Icons.restore_from_trash, color: Colors.amber[200], size: 35),
+                activeIcon: Icon(Icons.restore_from_trash, color: Colors.amber[600], size: 35),
+                label: 'RecycleBin',
               ),
             ],
             currentIndex: _selectedIndex,
@@ -178,7 +186,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
       title: 'Confirm Delete',
       content: 'Are you sure you want to delete?',
       onConfirm: () {
-        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue));
+        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue, description: ''));
       },
     );
   }

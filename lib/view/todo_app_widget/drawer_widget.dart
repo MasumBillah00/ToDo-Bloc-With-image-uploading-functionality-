@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todoapptask/view/todo_app_screen/complete_task_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/favoruite_item_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
+import '../login_screen/login_screen.dart';
 import '../todo_app_screen/deleted_item_screen.dart';
 
 class ToDo_Drawer extends StatelessWidget {
@@ -107,8 +108,10 @@ class ToDo_Drawer extends StatelessWidget {
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
-                    Navigator.pop(context); // Close the drawer
-                    // Implement logout logic here
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => NewLoginScreen()),
+                    );
                   },
                 ),
               ),

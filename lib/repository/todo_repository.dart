@@ -1,51 +1,39 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import '../database_helper/database_helper.dart';
 import '../model/todo_task_model.dart';
 
+
 class ToDoAppRepository {
-  static final ToDoAppRepository _instance = ToDoAppRepository._internal();
-  factory ToDoAppRepository() => _instance;
-  static Database? _database;
+  final TodoDatabaseHelper databaseHelper; // Instance of TodoDatabaseHelper
 
-  ToDoAppRepository._internal();
-
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDb();
-    return _database!;
-  }
-
-  Future<Database> _initDb() async {
-    String path = join(await getDatabasesPath(), 'todo_app.db');
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) {
-        return db.execute(
-          'CREATE TABLE tasks(id TEXT PRIMARY KEY, value TEXT, isDeleting INTEGER, isFavourite INTEGER, isDone INTEGER)',
-        );
-      },
-    );
-  }
+  ToDoAppRepository(this.databaseHelper); // Constructor to initialize the helper
 
   Future<void> addItem(TodoTaskModel item) async {
-    final db = await database;
-    await db.insert('tasks', item.toMap());
+    await databaseHelper.insertTask({
+      'id': item.id,
+      'value': item.value,
+      'description': item.description,
+      'isDeleting': item.isDeleting ? 1 : 0,
+      'isFavourite': item.isFavourite ? 1 : 0,
+    });
   }
 
   Future<List<TodoTaskModel>> fetchItems({bool includeDeleted = false}) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'tasks',
-      where: includeDeleted ? null : 'isDeleting = 0',
-    );
+    final List<Map<String, dynamic>> maps = await databaseHelper.queryAllTasks();
     return List.generate(maps.length, (i) {
-      return TodoTaskModel.fromMap(maps[i]);
+      return TodoTaskModel(
+        id: maps[i]['id'],
+        value: maps[i]['value'],
+        description: maps[i]['description'],
+        isDeleting: maps[i]['isDeleting'] == 1,
+        isFavourite: maps[i]['isFavourite'] == 1,
+      );
     });
   }
 
   Future<void> updateItem(TodoTaskModel item) async {
-    final db = await database;
+    final db = await databaseHelper.database;
     await db.update(
       'tasks',
       item.toMap(),
@@ -55,7 +43,7 @@ class ToDoAppRepository {
   }
 
   Future<void> hideItem(String id) async {
-    final db = await database;
+    final db = await databaseHelper.database;
     await db.update(
       'tasks',
       {'isDeleting': 1},
@@ -65,7 +53,7 @@ class ToDoAppRepository {
   }
 
   Future<void> deleteItemPermanently(String id) async {
-    final db = await database;
+    final db = await databaseHelper.database;
     await db.delete(
       'tasks',
       where: 'id = ?',
@@ -74,7 +62,7 @@ class ToDoAppRepository {
   }
 
   Future<void> restoreItem(String id) async {
-    final db = await database;
+    final db = await databaseHelper.database;
     await db.update(
       'tasks',
       {'isDeleting': 0},

@@ -3,27 +3,31 @@ import 'package:equatable/equatable.dart';
 class TodoTaskModel extends Equatable {
   final String id;
   final String value;
-  final bool isDeleting;
+  final String description;
   final bool isFavourite;
+  final bool isDeleting;
 
   const TodoTaskModel({
     required this.id,
     required this.value,
-    this.isDeleting = false,
+    required this.description,
     this.isFavourite = false,
+    this.isDeleting = false,
   });
 
   TodoTaskModel copyWith({
     String? id,
     String? value,
-    bool? isDeleting,
+    String? description,
     bool? isFavourite,
+    bool? isDeleting,
   }) {
     return TodoTaskModel(
       id: id ?? this.id,
       value: value ?? this.value,
-      isDeleting: isDeleting ?? this.isDeleting,
+      description: description ?? this.description,
       isFavourite: isFavourite ?? this.isFavourite,
+      isDeleting: isDeleting ?? this.isDeleting,
     );
   }
 
@@ -31,6 +35,7 @@ class TodoTaskModel extends Equatable {
     return TodoTaskModel(
       id: map['id'],
       value: map['value'],
+      description: map['description'], // Ensure this line is present
       isDeleting: map['isDeleting'] == 1,
       isFavourite: map['isFavourite'] == 1,
     );
@@ -40,11 +45,13 @@ class TodoTaskModel extends Equatable {
     return {
       'id': id,
       'value': value,
+      'description': description, // Ensure this line is present
       'isDeleting': isDeleting ? 1 : 0,
       'isFavourite': isFavourite ? 1 : 0,
     };
   }
 
   @override
-  List<Object?> get props => [id, value, isDeleting, isFavourite];
+  List<Object?> get props => [id, value, description, isFavourite, isDeleting];
 }
+

@@ -38,36 +38,41 @@ class FloatingActionButtonWidget extends StatelessWidget {
 class AddTaskButton extends StatelessWidget {
   const AddTaskButton({
     super.key,
-    required TextEditingController controller,
-  }) : _controller = controller;
+    required TextEditingController titleController,
+    required TextEditingController descriptionController,
+  })  : _titleController = titleController,
+        _descriptionController = descriptionController;
 
-  final TextEditingController _controller;
+  final TextEditingController _titleController;
+  final TextEditingController _descriptionController;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        final taskValue = _controller.text;
+        final taskValue = _titleController.text;
+        final taskDescription = _descriptionController.text;
         if (taskValue.isNotEmpty) {
           final newTask = TodoTaskModel(
             id: DateTime.now().toString(),
             value: taskValue,
+            description: taskDescription,
           );
           context.read<ToDoAppBloc>().add(AddTaskItem(item: newTask));
           Navigator.pop(context);
         }
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.amber, // Text color
-        shadowColor: Colors.amberAccent, // Shadow color
-        elevation: 5, // Elevation
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding
+        foregroundColor: Colors.amber,
+        shadowColor: Colors.amberAccent,
+        elevation: 5,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // Rounded corners
+          borderRadius: BorderRadius.circular(30),
         ),
         textStyle: const TextStyle(
-          fontSize: 20, // Text size
-          fontWeight: FontWeight.w600, // Text weight
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
         ),
       ),
       child: const Text(

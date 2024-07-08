@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/todoappbloc/todoapp_bloc.dart';
+import '../../bloc/todoappbloc/todoapp_event.dart';
+import '../../model/todo_task_model.dart';
 import '../todo_app_widget/button_widget.dart';
 
 class TaskAddScreen extends StatefulWidget {
@@ -9,11 +13,13 @@ class TaskAddScreen extends StatefulWidget {
 }
 
 class _TaskAddScreenState extends State<TaskAddScreen> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -31,7 +37,7 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextField(
-                controller: _controller,
+                controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Task',
                   labelStyle: TextStyle(
@@ -43,7 +49,6 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                     color: Colors.amber[200],
                   ),
                   filled: true,
-                  //fillColor: Colors.grey.shade800,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -72,7 +77,51 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              AddTaskButton(controller: _controller),
+              TextField(
+                controller: _descriptionController,
+                decoration: InputDecoration(
+                  labelText: 'Description',
+                  labelStyle: TextStyle(
+                    color: Colors.amber[200],
+                    fontWeight: FontWeight.bold,
+                  ),
+                  hintText: 'Enter task description',
+                  hintStyle: TextStyle(
+                    color: Colors.amber[200],
+                  ),
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.amber.shade200,
+                      width: 2.0,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(
+                      color: Colors.amber.shade200,
+                      width: 1.0,
+                    ),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.description,
+                    color: Colors.amber.shade200,
+                  ),
+                ),
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              AddTaskButton(
+                titleController: _titleController,
+                descriptionController: _descriptionController,
+              ),
             ],
           ),
         ),
@@ -80,3 +129,5 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     );
   }
 }
+
+

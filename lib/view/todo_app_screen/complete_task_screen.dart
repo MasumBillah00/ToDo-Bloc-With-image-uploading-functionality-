@@ -79,7 +79,7 @@ class CompleteTasksScreen extends StatelessWidget {
       title: 'Confirm Delete',
       content: 'Are you sure you want to delete?',
       onConfirm: () {
-        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue));
+        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue, description: ''));
       },
     );
   }

@@ -54,3 +54,60 @@ class CustomText extends StatelessWidget {
   }
 }
 
+
+
+
+
+class DCustomText extends StatefulWidget {
+  final String text;
+  final bool isSelected;
+
+  const DCustomText({
+    required this.text,
+    this.isSelected = false,
+  });
+
+  @override
+  _DCustomTextState createState() => _DCustomTextState();
+}
+
+class _DCustomTextState extends State<DCustomText> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> words = widget.text.split(' ');
+    String displayText = words.take(2).join(' '); // Display first two words initially
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _isExpanded ? widget.text : displayText,
+          style: TextStyle(
+            color: widget.isSelected ? Colors.red : Colors.white70,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        if (words.length > 2) // Display 'See more' button if more than two words
+          TextButton(
+            onPressed: () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            },
+            child: Text(
+              _isExpanded ? 'See less' : 'See more',
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+
+
+
+

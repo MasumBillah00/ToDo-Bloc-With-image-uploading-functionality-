@@ -1,39 +1,52 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseHelper {
+class TodoDatabaseHelper {
+  static final TodoDatabaseHelper _instance = TodoDatabaseHelper._internal();
   static Database? _database;
-  static final DatabaseHelper _instance = DatabaseHelper._privateConstructor();
 
-  DatabaseHelper._privateConstructor();
+  TodoDatabaseHelper._internal();
 
-  factory DatabaseHelper() {
-    return _instance;
-  }
+  factory TodoDatabaseHelper() => _instance;
 
   Future<Database> get database async {
     if (_database != null) return _database!;
-
-    _database = await initDB();
+    _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> initDB() async {
-    String path = join(await getDatabasesPath(), 'todo_database.db');
+  Future<Database> _initDatabase() async {
+    final path = join(await getDatabasesPath(), 'todo_database.db');
     return await openDatabase(
       path,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE tasks(
-            id TEXT PRIMARY KEY,
-            value TEXT,
-            isDeleting INTEGER DEFAULT 0,
-            isFavourite INTEGER DEFAULT 0
-          )
-        ''');
-      },
-      version: 1,
+      version: 2, // Increment version number for schema change
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute(
+        '''
+      CREATE TABLE tasks(
+        id TEXT PRIMARY KEY,
+        value TEXT,
+        description TEXT,
+        isDeleting INTEGER,
+        isFavourite INTEGER
+      )
+      '''
+    );
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+          '''
+        ALTER TABLE tasks ADD COLUMN description TEXT
+        '''
+      );
+    }
   }
 
   Future<List<Map<String, dynamic>>> queryAllTasks() async {
