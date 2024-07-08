@@ -43,7 +43,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       print('Response status: ${response.statusCode}');
       var data1 = jsonDecode(response.body);
       if (response.statusCode == 200) {
-
         emit(
           state.copyWith(
             loginStatus: LoginStatus.success,

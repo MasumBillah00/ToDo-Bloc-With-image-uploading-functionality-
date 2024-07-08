@@ -31,6 +31,65 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
     super.dispose();
   }
 
+  void _showUpdateEmailDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String? newEmail;
+        return AlertDialog(
+          title: const Text('Update Email'),
+          content: TextFormField(
+            decoration: const InputDecoration(hintText: 'Enter new email'),
+            onChanged: (value) {
+              newEmail = value;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (newEmail != null && newEmail!.isNotEmpty) {
+                  _loginBloc.add(EmailChanged(email: newEmail!));
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showUpdatePasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        String? newPassword;
+        return AlertDialog(
+          title: const Text('Update Password'),
+          content: TextFormField(
+            decoration: const InputDecoration(hintText: 'Enter new password'),
+            obscureText: true,
+            onChanged: (value) {
+              newPassword = value;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (newPassword != null && newPassword!.isNotEmpty) {
+                  _loginBloc.add(PasswordChanged(password: newPassword!));
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Update'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,7 +200,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 50),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
@@ -161,15 +220,25 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           },
                           child: state.loginStatus == LoginStatus.loading
                               ? const CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                )
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
                               : const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _showUpdateEmailDialog,
+                          child: const Text('Change Email'),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _showUpdatePasswordDialog,
+                          child: const Text('Change Password'),
                         ),
                       ],
                     ),
