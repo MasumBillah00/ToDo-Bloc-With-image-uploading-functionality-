@@ -1,69 +1,40 @@
-import 'dart:convert';
-
+import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:http/http.dart' as http;
+import '../../database_helper/database_helper.dart';
+import 'login_event.dart';
+import 'login_state.dart';
 
-part 'login_event.dart';
-part 'login_state.dart';
+
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(const LoginState()) {
+  final TodoDatabaseHelper _databaseHelper;
+
+  LoginBloc(this._databaseHelper) : super(const LoginState()) {
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
-    on<LoginApi>(_loginApi);
+    on<LoginSubmitted>(_onLoginSubmitted);
   }
 
   void _onEmailChanged(EmailChanged event, Emitter<LoginState> emit) {
-    emit(
-      state.copyWith(
-        email: event.email,
-      ),
-    );
+    emit(state.copyWith(email: event.email));
   }
 
   void _onPasswordChanged(PasswordChanged event, Emitter<LoginState> emit) {
-    emit(
-      state.copyWith(
-        password: event.password,
-      ),
-    );
+    emit(state.copyWith(password: event.password));
   }
 
-  void _loginApi(LoginApi event, Emitter<LoginState> emit) async {
-    emit(
-      state.copyWith(
-        loginStatus: LoginStatus.loading,
-      ),
-    );
-    Map data = {'email': state.email, 'password': state.password};
+  Future<void> _onLoginSubmitted(LoginSubmitted event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(status: LoginStatus.loading));
 
     try {
-      final response = await http.post(Uri.parse('https://reqres.in/api/login'), body: data);
-      print('Response status: ${response.statusCode}');
-      var data1 = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        emit(
-          state.copyWith(
-            loginStatus: LoginStatus.success,
-            message: 'Login successful',
-          ),
-        );
+      final user = await _databaseHelper.getUser(state.email, state.password);
+      if (user != null) {
+        emit(state.copyWith(status: LoginStatus.success, message: 'Login successful'));
       } else {
-        emit(
-          state.copyWith(
-            loginStatus: LoginStatus.error,
-            message: data1['error'],
-          ),
-        );
+        emit(state.copyWith(status: LoginStatus.error, message: 'Invalid email or password'));
       }
     } catch (e) {
-      emit(
-        state.copyWith(
-          loginStatus: LoginStatus.error,
-          message: e.toString(),
-        ),
-      );
+      emit(state.copyWith(status: LoginStatus.error, message: e.toString()));
     }
   }
 }

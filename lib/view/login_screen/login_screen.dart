@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/login/login_bloc.dart';
+import '../../bloc/login/login_event.dart';
+import '../../bloc/login/login_state.dart';
 import '../todo_app_screen/todo_app_screen.dart';
 
 class NewLoginScreen extends StatefulWidget {
@@ -20,14 +22,13 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
   @override
   void initState() {
     super.initState();
-    _loginBloc = LoginBloc();
+    _loginBloc = context.read<LoginBloc>();
   }
 
   @override
   void dispose() {
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
-    _loginBloc.close();
     super.dispose();
   }
 
@@ -48,7 +49,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
             TextButton(
               onPressed: () {
                 if (newEmail != null && newEmail!.isNotEmpty) {
-                  _loginBloc.add(EmailChanged(email: newEmail!));
+                  _loginBloc.add(EmailChanged(newEmail!));
                   Navigator.of(context).pop();
                 }
               },
@@ -60,49 +61,22 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
     );
   }
 
-  void _showUpdatePasswordDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        String? newPassword;
-        return AlertDialog(
-          title: const Text('Update Password'),
-          content: TextFormField(
-            decoration: const InputDecoration(hintText: 'Enter new password'),
-            obscureText: true,
-            onChanged: (value) {
-              newPassword = value;
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (newPassword != null && newPassword!.isNotEmpty) {
-                  _loginBloc.add(PasswordChanged(password: newPassword!));
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Update'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (_) => _loginBloc,
+        create: (context) => _loginBloc,
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
-            if (state.loginStatus == LoginStatus.success) {
+            if (state.status == LoginStatus.success) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const ToDoAppScreen()),
               );
-            } else if (state.loginStatus == LoginStatus.error) {
+            } else if (state.status == LoginStatus.error) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.message)),
               );
@@ -140,9 +114,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           focusNode: emailFocusNode,
                           onChanged: (value) {
-                            _loginBloc.add(
-                              EmailChanged(email: value),
-                            );
+                            _loginBloc.add(EmailChanged(value));
                           },
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -173,9 +145,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           focusNode: passwordFocusNode,
                           obscureText: true,
                           onChanged: (value) {
-                            _loginBloc.add(
-                              PasswordChanged(password: value),
-                            );
+                            _loginBloc.add(PasswordChanged(value));
                           },
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -213,12 +183,10 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           ),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              _loginBloc.add(
-                                LoginApi(),
-                              );
+                              _loginBloc.add(LoginSubmitted());
                             }
                           },
-                          child: state.loginStatus == LoginStatus.loading
+                          child: state.status == LoginStatus.loading
                               ? const CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           )
@@ -231,15 +199,15 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _showUpdateEmailDialog,
-                          child: const Text('Change Email'),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _showUpdatePasswordDialog,
-                          child: const Text('Change Password'),
-                        ),
+                        // ElevatedButton(
+                        //   onPressed: _showUpdateEmailDialog,
+                        //   child: const Text('Change Email'),
+                        // ),
+                        // const SizedBox(height: 20),
+                        // ElevatedButton(
+                        //   onPressed: _showUpdatePasswordDialog,
+                        //   child: const Text('Change Password'),
+                        // ),
                       ],
                     ),
                   ),

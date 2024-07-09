@@ -38,29 +38,32 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
       await toDoAppRepository.addItem(event.item);
       final taskList = await toDoAppRepository.fetchItems();
       final favouriteItems = taskList.where((item) => item.isFavourite).toList();
-      emit(state.copyWith(taskItemList: List.from(taskList), favouriteList: favouriteItems));
+      emit(state.copyWith(taskItemList: List.from(taskList), favouriteList: favouriteItems, listStatus: ListStatus.success));
     } catch (e) {
       if (e is Exception && e.toString().contains('already exists')) {
-        emit(state.copyWith(listStatus: ListStatus.failure, errorMessage: e.toString()));
+        emit(state.copyWith(listStatus: ListStatus.failure, errorMessage: 'Task with this title already exists.'));
       } else {
         emit(state.copyWith(listStatus: ListStatus.failure, errorMessage: 'Failed to add task'));
       }
     }
   }
 
+
+
   void _handleFavouriteItem(FavouriteItem event, Emitter<TodoappState> emit) async {
     try {
       await toDoAppRepository.updateItem(event.item.copyWith(isFavourite: !event.item.isFavourite));
-      final taskList = await toDoAppRepository.fetchItems();
+      final taskList = await toDoAppRepository.fetchItems(); // By default, hidden items are excluded
       final favouriteItems = taskList.where((item) => item.isFavourite).toList();
       emit(state.copyWith(
-        taskItemList: List.from(taskList),
+        taskItemList: taskList,
         favouriteList: favouriteItems,
       ));
     } catch (_) {
       emit(state.copyWith(listStatus: ListStatus.failure));
     }
   }
+
 
   void _deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
     try {
@@ -77,34 +80,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-  // void _hideItem(HideItem event, Emitter<TodoappState> emit) async {
-  //   try {
-  //     await toDoAppRepository.hideItem(event.id);
-  //
-  //     final taskList = await toDoAppRepository.fetchItems();
-  //     final hiddenItem = taskList.firstWhere(
-  //           (item) => item.id == event.id,
-  //       orElse: () => TodoTaskModel(
-  //         id: event.id,
-  //         value: event.value,
-  //         description: event.description, // Handle description
-  //         isFavourite: false,
-  //         isDeleting: true,
-  //       ),
-  //     );
-  //
-  //     final updatedSelectedList = List<TodoTaskModel>.from(state.selectedList)
-  //       ..removeWhere((item) => item.id == event.id);
-  //
-  //     emit(state.copyWith(
-  //       taskItemList: List.from(taskList),
-  //       hiddenTaskList: List.from(state.hiddenTaskList)..add(hiddenItem),
-  //       selectedList: updatedSelectedList,
-  //     ));
-  //   } catch (_) {
-  //     emit(state.copyWith(listStatus: ListStatus.failure));
-  //   }
-  // }
 
   void _hideItem(HideItem event, Emitter<TodoappState> emit) async {
     try {
@@ -139,6 +114,11 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
   }
 
 
+
+
+
+
+
   void _fetchHiddenTasks(FetchHiddenTasks event, Emitter<TodoappState> emit) async {
     try {
       final hiddenTaskList = await toDoAppRepository.fetchItems(includeDeleted: true);
@@ -152,13 +132,14 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
+
   void _restoreItem(RestoreItem event, Emitter<TodoappState> emit) async {
     try {
       await toDoAppRepository.restoreItem(event.id);
       final taskList = await toDoAppRepository.fetchItems();
       emit(state.copyWith(
-        taskItemList: List.from(taskList),
-        hiddenTaskList: List.from(state.hiddenTaskList)..removeWhere((task) => task.id == event.id),
+        taskItemList: taskList,
+        hiddenTaskList: state.hiddenTaskList.where((task) => task.id != event.id).toList(),
       ));
     } catch (_) {
       emit(state.copyWith(listStatus: ListStatus.failure));

@@ -40,8 +40,7 @@ class AddTaskButton extends StatelessWidget {
     super.key,
     required TextEditingController titleController,
     required TextEditingController descriptionController,
-  })  : _titleController = titleController,
-        _descriptionController = descriptionController;
+  }) : _titleController = titleController, _descriptionController = descriptionController;
 
   final TextEditingController _titleController;
   final TextEditingController _descriptionController;
@@ -59,7 +58,6 @@ class AddTaskButton extends StatelessWidget {
             description: taskDescription,
           );
           context.read<ToDoAppBloc>().add(AddTaskItem(item: newTask));
-          Navigator.pop(context);
         }
       },
       style: ElevatedButton.styleFrom(
@@ -75,9 +73,8 @@ class AddTaskButton extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-      child: const Text(
-        'Add Task',
-      ),
+      child: const Text('Add Task'),
     );
   }
 }
+

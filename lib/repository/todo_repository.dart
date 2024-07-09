@@ -6,15 +6,14 @@ class ToDoAppRepository {
 
   ToDoAppRepository(this.databaseHelper);
 
+
   Future<void> addItem(TodoTaskModel item) async {
     try {
       // Check if a task with the same title already exists
-      final existingTask = await databaseHelper.queryTask(item.id);
+      final existingTask = await databaseHelper.queryTaskByTitle(item.value);
       if (existingTask != null) {
         throw Exception('Task with title "${item.value}" already exists.');
       }
-
-      // If no existing task, proceed with insertion
       await databaseHelper.insertTask({
         'id': item.id,
         'value': item.value,
@@ -28,6 +27,8 @@ class ToDoAppRepository {
     }
   }
 
+
+
   Future<List<TodoTaskModel>> fetchItems({bool includeDeleted = false}) async {
     final List<Map<String, dynamic>> maps = await databaseHelper.queryAllTasks();
     return List.generate(maps.length, (i) {
@@ -38,8 +39,11 @@ class ToDoAppRepository {
         isDeleting: maps[i]['isDeleting'] == 1,
         isFavourite: maps[i]['isFavourite'] == 1,
       );
-    });
+    }).where((task) => includeDeleted || !task.isDeleting).toList();
   }
+
+
+
 
   Future<void> updateItem(TodoTaskModel item) async {
     final db = await databaseHelper.database;

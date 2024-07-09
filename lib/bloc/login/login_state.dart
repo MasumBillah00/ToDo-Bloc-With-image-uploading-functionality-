@@ -1,34 +1,35 @@
-part of 'login_bloc.dart';
+
+import 'package:equatable/equatable.dart';
 
 enum LoginStatus { initial, loading, success, error }
 
 class LoginState extends Equatable {
+  final String email;
+  final String password;
+  final LoginStatus status;
+  final String message;
+
   const LoginState({
     this.email = '',
     this.password = '',
+    this.status = LoginStatus.initial,
     this.message = '',
-    this.loginStatus = LoginStatus.initial
   });
-
-  final String email;
-  final String password;
-  final String message;
-  final LoginStatus loginStatus;
 
   LoginState copyWith({
     String? email,
     String? password,
+    LoginStatus? status,
     String? message,
-    LoginStatus? loginStatus,
   }) {
     return LoginState(
       email: email ?? this.email,
       password: password ?? this.password,
+      status: status ?? this.status,
       message: message ?? this.message,
-      loginStatus: loginStatus ?? this.loginStatus,
     );
   }
 
   @override
-  List<Object> get props => [email, password, message, loginStatus];
+  List<Object> get props => [email, password, status, message];
 }

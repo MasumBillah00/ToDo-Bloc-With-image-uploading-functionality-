@@ -105,7 +105,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             ),
                           ],
                         ),
-                        subtitle: DCustomText( // Display the description
+                        subtitle: DCustomText(
                           text: item.description,
                           isSelected: isSelected,
                         ),
@@ -120,6 +120,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

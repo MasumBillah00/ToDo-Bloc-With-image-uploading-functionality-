@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todoapptask/model/todo_task_model.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
-import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class FavouriteScreen extends StatelessWidget {
