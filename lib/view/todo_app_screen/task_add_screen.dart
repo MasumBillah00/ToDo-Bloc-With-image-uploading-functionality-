@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
-import '../../model/todo_task_model.dart';
 import '../todo_app_widget/button_widget.dart';
 
 class TaskAddScreen extends StatefulWidget {
@@ -30,6 +30,16 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Add Task'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.read<ToDoAppBloc>().add(ClearErrorEvent());
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const ToDoAppScreen()),
+              );
+            },
+          ),
         ),
         body: BlocConsumer<ToDoAppBloc, TodoappState>(
           listener: (context, state) {
@@ -133,7 +143,10 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  AddTaskButton(titleController: _titleController, descriptionController: _descriptionController),
+                  AddTaskButton(
+                    titleController: _titleController,
+                    descriptionController: _descriptionController,
+                  ),
                 ],
               ),
             );
@@ -143,4 +156,3 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
     );
   }
 }
-

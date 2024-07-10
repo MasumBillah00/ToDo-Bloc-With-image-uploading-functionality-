@@ -19,6 +19,9 @@ class AddTaskItem extends ToDoAppEvent {
   List<Object?> get props => [item];
 }
 
+
+class ClearErrorEvent extends ToDoAppEvent {}
+
 class FavouriteItem extends ToDoAppEvent {
   final TodoTaskModel item;
 

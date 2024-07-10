@@ -27,3 +27,8 @@ class PasswordChanged extends LoginEvent {
 }
 
 class LoginSubmitted extends LoginEvent {}
+
+class Logout extends LoginEvent {
+  @override
+  List<Object> get props => [];
+}

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/view/todo_app_screen/complete_task_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/favoruite_item_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
+import '../../bloc/login/login_bloc.dart';
+import '../../bloc/login/login_event.dart';
 import '../login_screen/login_screen.dart';
 import '../todo_app_screen/deleted_item_screen.dart';
 
@@ -108,10 +111,13 @@ class ToDo_Drawer extends StatelessWidget {
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                   ),
                   onTap: () {
+
+                    context.read<LoginBloc>().add(Logout());
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => NewLoginScreen()),
+                      MaterialPageRoute(builder: (context) => const NewLoginScreen()),
                     );
+
                   },
                 ),
               ),

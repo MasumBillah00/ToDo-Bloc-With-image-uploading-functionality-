@@ -4,8 +4,6 @@ import '../../database_helper/database_helper.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
-
-
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final TodoDatabaseHelper _databaseHelper;
 
@@ -13,6 +11,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<EmailChanged>(_onEmailChanged);
     on<PasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onLoginSubmitted);
+    on<Logout>(_onLogout);
   }
 
   void _onEmailChanged(EmailChanged event, Emitter<LoginState> emit) {
@@ -36,5 +35,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } catch (e) {
       emit(state.copyWith(status: LoginStatus.error, message: e.toString()));
     }
+  }
+
+  void _onLogout(Logout event, Emitter<LoginState> emit) {
+    emit(LoginState());
   }
 }

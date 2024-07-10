@@ -17,15 +17,17 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     on<RestoreItem>(_restoreItem);
     on<SelectItem>(_selectItem);
     on<UnSelectItem>(_unSelectItem);
+    on<ClearErrorEvent>(_clearError);
   }
 
   void _fetchList(FetchTaskList event, Emitter<TodoappState> emit) async {
+    emit(state.copyWith(listStatus: ListStatus.loading)); // Add loading state
     try {
       final taskList = await toDoAppRepository.fetchItems();
-      final favouriteItems = taskList.where((item) => item.isFavourite).toList();
+      final taskItemList = taskList.where((item) => item.isFavourite).toList();
       emit(state.copyWith(
         taskItemList: List.from(taskList),
-        favouriteList: favouriteItems,
+        favouriteList: taskItemList,
         listStatus: ListStatus.success,
       ));
     } catch (_) {
@@ -48,7 +50,9 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-
+  void _clearError(ClearErrorEvent event, Emitter<TodoappState> emit) {
+    emit(state.copyWith(listStatus: ListStatus.initial, errorMessage: ''));
+  }
 
   void _handleFavouriteItem(FavouriteItem event, Emitter<TodoappState> emit) async {
     try {
@@ -64,7 +68,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-
   void _deleteItem(DeleteItem event, Emitter<TodoappState> emit) async {
     try {
       await toDoAppRepository.deleteItemPermanently(event.id);
@@ -79,7 +82,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
       emit(state.copyWith(listStatus: ListStatus.failure));
     }
   }
-
 
   void _hideItem(HideItem event, Emitter<TodoappState> emit) async {
     try {
@@ -113,12 +115,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
     }
   }
 
-
-
-
-
-
-
   void _fetchHiddenTasks(FetchHiddenTasks event, Emitter<TodoappState> emit) async {
     try {
       final hiddenTaskList = await toDoAppRepository.fetchItems(includeDeleted: true);
@@ -131,7 +127,6 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
       emit(state.copyWith(listStatus: ListStatus.failure));
     }
   }
-
 
   void _restoreItem(RestoreItem event, Emitter<TodoappState> emit) async {
     try {

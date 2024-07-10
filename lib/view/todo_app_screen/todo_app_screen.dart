@@ -35,7 +35,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     });
   }
 
-  @override
   Widget _getBody() {
     switch (_selectedIndex) {
       case 1:

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../model/todo_task_model.dart';
 
-enum ListStatus { loading, success, failure }
+enum ListStatus { loading, success, failure,initial }
 
 class TodoappState extends Equatable {
   final List<TodoTaskModel> taskItemList;
