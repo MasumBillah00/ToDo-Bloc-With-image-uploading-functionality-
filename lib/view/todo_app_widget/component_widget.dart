@@ -46,7 +46,7 @@ class CustomText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        color: isSelected ? Colors.red : Colors.white,
+        color: isSelected ? Colors.red : Colors.amber.shade800,
         fontSize: 22,
         fontWeight: FontWeight.bold,
       ),
@@ -85,8 +85,8 @@ class _DCustomTextState extends State<DCustomText> {
         Text(
           _isExpanded ? widget.text : displayText,
           style: TextStyle(
-            color: widget.isSelected ? Colors.red : Colors.white70,
-            fontSize: 20,
+            color: widget.isSelected ? Colors.amber.shade100 : Colors.white70,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

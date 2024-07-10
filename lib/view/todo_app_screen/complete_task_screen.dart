@@ -42,6 +42,7 @@ class CompleteTasksScreen extends StatelessWidget {
                   itemCount: state.selectedList.length,
                   itemBuilder: (context, index) {
                     final item = state.selectedList[index];
+                    final isSelected = state.selectedList.contains(item);
                     return Card(
                       color: Colors.grey[800],
                       elevation: 4,
@@ -52,6 +53,10 @@ class CompleteTasksScreen extends StatelessWidget {
                         title: CustomText(
                           text: item.value,
                         ),
+                        subtitle:  DCustomText(
+                        text: item.description,
+                        isSelected: isSelected,
+                      ),
                         trailing: CustomIconButton(
                           icon: Icons.delete,
                          // size: 30,

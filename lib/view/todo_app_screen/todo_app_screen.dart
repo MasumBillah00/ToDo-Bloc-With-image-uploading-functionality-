@@ -35,6 +35,9 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     });
   }
 
+
+
+  @override
   Widget _getBody() {
     switch (_selectedIndex) {
       case 1:
@@ -68,6 +71,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                       ),
                       child: ListTile(
                         leading: Checkbox(
+
                           value: isSelected,
                           onChanged: (bool? value) {
                             if (value == true) {
@@ -119,6 +123,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         );
     }
   }
+
 
 
   @override

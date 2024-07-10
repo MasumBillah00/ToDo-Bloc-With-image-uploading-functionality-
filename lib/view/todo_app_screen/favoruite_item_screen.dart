@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
+import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class FavouriteScreen extends StatelessWidget {
- // const FavouriteScreen({super.key});
   final ValueChanged<int> onItemTapped;
 
   const FavouriteScreen({super.key, required this.onItemTapped});
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +26,8 @@ class FavouriteScreen extends StatelessWidget {
             ),
             centerTitle: true,
           ),
-          drawer:  ToDo_Drawer(onItemTapped: onItemTapped),
+          drawer: ToDo_Drawer(onItemTapped: onItemTapped),
           body: Padding(
-
             padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
             child: BlocBuilder<ToDoAppBloc, TodoappState>(
               builder: (context, state) {
@@ -44,6 +42,7 @@ class FavouriteScreen extends StatelessWidget {
                     itemCount: state.favouriteList.length,
                     itemBuilder: (context, index) {
                       final item = state.favouriteList[index];
+                      final isSelected = state.selectedList.contains(item);
                       return Card(
                         color: Colors.grey[800],
                         elevation: 4,
@@ -51,13 +50,12 @@ class FavouriteScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ListTile(
-                          title: Text(
-                            item.value,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          title: CustomText(
+                          text: item.value,
+                        ),
+                          subtitle:  DCustomText(
+                            text: item.description,
+                            isSelected: isSelected,
                           ),
                         ),
                       );
@@ -72,5 +70,3 @@ class FavouriteScreen extends StatelessWidget {
     );
   }
 }
-
-
