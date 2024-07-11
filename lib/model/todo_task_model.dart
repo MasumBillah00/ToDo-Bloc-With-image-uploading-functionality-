@@ -54,4 +54,3 @@ class TodoTaskModel extends Equatable {
   @override
   List<Object?> get props => [id, value, description, isFavourite, isDeleting];
 }
-

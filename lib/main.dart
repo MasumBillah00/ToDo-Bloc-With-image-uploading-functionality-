@@ -10,7 +10,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final databaseHelper = TodoDatabaseHelper();
 
-  // Insert the default user if it doesn't exist
   const defaultEmail = 'm.billahkst@gmail.com';
   const defaultPassword = '12345';
   final existingUser = await databaseHelper.getUser(defaultEmail, defaultPassword);

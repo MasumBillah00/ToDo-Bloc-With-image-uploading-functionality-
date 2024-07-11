@@ -29,7 +29,9 @@ class DeletedItemScreen extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        drawer:  ToDo_Drawer(onItemTapped: onItemTapped,),
+        drawer: ToDo_Drawer(
+          onItemTapped: onItemTapped,
+        ),
         body: Padding(
           padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
           child: BlocBuilder<ToDoAppBloc, TodoappState>(
@@ -51,34 +53,32 @@ class DeletedItemScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                        child: ListTile(
+                      child: ListTile(
                           title: CustomText(
                             text: task.value,
                           ),
-
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomIconButton(
-                              icon: Icons.restore_from_trash,
-                              //size: 30,
-                              color: Colors.white,
-                              onPressed: () {
-                                context.read<ToDoAppBloc>().add(RestoreItem(id: task.id));
-                              },
-                            ),
-                            const SizedBox(width: 8),
-                            CustomIconButton(
-                              icon: Icons.delete_forever,
-                              //size: 30,
-                              color: Colors.red,
-                              onPressed: () {
-                                _showDeleteConfirmationDialog(context, task.id);
-                              },
-                            ),
-                          ],
-                        )
-                      ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CustomIconButton(
+                                icon: Icons.restore_from_trash,
+                                //size: 30,
+                                color: Colors.white,
+                                onPressed: () {
+                                  context.read<ToDoAppBloc>().add(RestoreItem(id: task.id));
+                                },
+                              ),
+                              const SizedBox(width: 8),
+                              CustomIconButton(
+                                icon: Icons.delete_forever,
+                                //size: 30,
+                                color: Colors.red,
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(context, task.id);
+                                },
+                              ),
+                            ],
+                          )),
                     );
                   },
                 );
@@ -90,8 +90,6 @@ class DeletedItemScreen extends StatelessWidget {
     );
   }
 
-
-
   void _showDeleteConfirmationDialog(BuildContext context, String taskId) {
     showConfirmationDialog(
       context: context,
@@ -102,5 +100,4 @@ class DeletedItemScreen extends StatelessWidget {
       },
     );
   }
-
 }

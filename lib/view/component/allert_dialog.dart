@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 void showConfirmationDialog({
   required BuildContext context,
   required String title,

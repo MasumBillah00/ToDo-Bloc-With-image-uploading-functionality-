@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../model/todo_task_model.dart';
 
-enum ListStatus { loading, success, failure,initial }
+enum ListStatus { loading, success, failure, initial }
 
 class TodoappState extends Equatable {
   final List<TodoTaskModel> taskItemList;
@@ -40,11 +40,11 @@ class TodoappState extends Equatable {
 
   @override
   List<Object?> get props => [
-    taskItemList,
-    hiddenTaskList,
-    favouriteList,
-    selectedList,
-    listStatus,
-    errorMessage,
-  ];
+        taskItemList,
+        hiddenTaskList,
+        favouriteList,
+        selectedList,
+        listStatus,
+        errorMessage,
+      ];
 }

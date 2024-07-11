@@ -29,7 +29,6 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
     super.dispose();
-
   }
 
   @override
@@ -158,15 +157,15 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                         },
                         child: state.status == LoginStatus.loading
                             ? const CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        )
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              )
                             : const Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ],
                   ),

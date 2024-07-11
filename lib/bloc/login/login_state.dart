@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 enum LoginStatus { initial, loading, success, error }

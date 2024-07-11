@@ -51,9 +51,9 @@ class FavouriteScreen extends StatelessWidget {
                         ),
                         child: ListTile(
                           title: CustomText(
-                          text: item.value,
-                        ),
-                          subtitle:  DCustomText(
+                            text: item.value,
+                          ),
+                          subtitle: DCustomText(
                             text: item.description,
                             isSelected: isSelected,
                           ),

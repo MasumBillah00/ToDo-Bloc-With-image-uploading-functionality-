@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
@@ -40,7 +38,8 @@ class AddTaskButton extends StatelessWidget {
     super.key,
     required TextEditingController titleController,
     required TextEditingController descriptionController,
-  }) : _titleController = titleController, _descriptionController = descriptionController;
+  })  : _titleController = titleController,
+        _descriptionController = descriptionController;
 
   final TextEditingController _titleController;
   final TextEditingController _descriptionController;
@@ -77,4 +76,3 @@ class AddTaskButton extends StatelessWidget {
     );
   }
 }
-

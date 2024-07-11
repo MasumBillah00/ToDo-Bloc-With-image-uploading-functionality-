@@ -19,7 +19,6 @@ class AddTaskItem extends ToDoAppEvent {
   List<Object?> get props => [item];
 }
 
-
 class ClearErrorEvent extends ToDoAppEvent {}
 
 class FavouriteItem extends ToDoAppEvent {
@@ -49,8 +48,6 @@ class UnSelectItem extends ToDoAppEvent {
   List<Object?> get props => [item];
 }
 
-
-
 class DeleteItem extends ToDoAppEvent {
   final String id;
   const DeleteItem({required this.id});
@@ -58,7 +55,6 @@ class DeleteItem extends ToDoAppEvent {
   @override
   List<Object?> get props => [id];
 }
-
 
 class HideItem extends ToDoAppEvent {
   final String id;
@@ -71,10 +67,7 @@ class HideItem extends ToDoAppEvent {
   List<Object?> get props => [id, value, description];
 }
 
-
-
 class FetchHiddenTasks extends ToDoAppEvent {}
-
 
 class RestoreItem extends ToDoAppEvent {
   final String id;

@@ -35,9 +35,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     });
   }
 
-
-
-  @override
   Widget _getBody() {
     switch (_selectedIndex) {
       case 1:
@@ -71,7 +68,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                       ),
                       child: ListTile(
                         leading: Checkbox(
-
                           value: isSelected,
                           onChanged: (bool? value) {
                             if (value == true) {
@@ -124,8 +120,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -134,17 +128,17 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         child: Scaffold(
           appBar: _selectedIndex == 0
               ? AppBar(
-            title: const Text(
-              'TODO APP',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 30,
-              ),
-            ),
-            centerTitle: true,
-          )
+                  title: const Text(
+                    'TODO APP',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 30,
+                    ),
+                  ),
+                  centerTitle: true,
+                )
               : null,
-          drawer:  ToDo_Drawer(onItemTapped: _onItemTapped),
+          drawer: ToDo_Drawer(onItemTapped: _onItemTapped),
           body: BlocConsumer<ToDoAppBloc, TodoappState>(
             listener: (context, state) {
               if (state.listStatus == ListStatus.failure && state.errorMessage.isNotEmpty) {

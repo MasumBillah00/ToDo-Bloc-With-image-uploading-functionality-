@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../model/todo_task_model.dart';
-
-
-
 // class Card_Widget extends StatelessWidget {
 //   const Card_Widget({
 //     super.key,
@@ -30,13 +26,12 @@ import '../../model/todo_task_model.dart';
 //   }
 // }
 
-
-
 class CustomText extends StatelessWidget {
   final String text;
   final bool isSelected;
 
   const CustomText({
+    super.key,
     required this.text,
     this.isSelected = false,
   });
@@ -54,15 +49,12 @@ class CustomText extends StatelessWidget {
   }
 }
 
-
-
-
-
 class DCustomText extends StatefulWidget {
   final String text;
   final bool isSelected;
 
   const DCustomText({
+    super.key,
     required this.text,
     this.isSelected = false,
   });
@@ -99,15 +91,10 @@ class _DCustomTextState extends State<DCustomText> {
             },
             child: Text(
               _isExpanded ? 'See less' : 'See more',
-              style: TextStyle(color: Colors.blue),
+              style: const TextStyle(color: Colors.blue),
             ),
           ),
       ],
     );
   }
 }
-
-
-
-
-

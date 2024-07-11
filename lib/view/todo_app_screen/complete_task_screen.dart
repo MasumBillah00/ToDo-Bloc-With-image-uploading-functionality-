@@ -53,19 +53,18 @@ class CompleteTasksScreen extends StatelessWidget {
                         title: CustomText(
                           text: item.value,
                         ),
-                        subtitle:  DCustomText(
-                        text: item.description,
-                        isSelected: isSelected,
-                      ),
+                        subtitle: DCustomText(
+                          text: item.description,
+                          isSelected: isSelected,
+                        ),
                         trailing: CustomIconButton(
                           icon: Icons.delete,
-                         // size: 30,
+                          // size: 30,
                           color: AppColors.deleteColor,
                           onPressed: () {
                             _showHideConfirmationDialog(context, item.id, item.value);
                           },
                         ),
-
                       ),
                     );
                   },
@@ -89,6 +88,3 @@ class CompleteTasksScreen extends StatelessWidget {
     );
   }
 }
-
-
-
