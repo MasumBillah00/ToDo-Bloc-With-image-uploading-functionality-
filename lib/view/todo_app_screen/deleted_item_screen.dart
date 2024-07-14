@@ -57,6 +57,7 @@ class DeletedItemScreen extends StatelessWidget {
                           title: CustomText(
                             text: task.value,
                           ),
+
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

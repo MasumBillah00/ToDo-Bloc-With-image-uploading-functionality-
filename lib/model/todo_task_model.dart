@@ -4,6 +4,7 @@ class TodoTaskModel extends Equatable {
   final String id;
   final String value;
   final String description;
+  //final DateTime date;
   final bool isFavourite;
   final bool isDeleting;
 

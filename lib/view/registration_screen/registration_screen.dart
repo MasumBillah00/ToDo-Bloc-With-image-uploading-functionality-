@@ -1,54 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todoapptask/view/registration_screen/registration_screen.dart';
-import '../../bloc/login/login_bloc.dart';
-import '../../bloc/login/login_event.dart';
-import '../../bloc/login/login_state.dart';
-import '../todo_app_screen/todo_app_screen.dart';
+import '../../bloc/registration/registration_bloc.dart';
+import '../../bloc/registration/registration_event.dart';
+import '../../bloc/registration/registration_state.dart';
+import '../login_screen/login_screen.dart';
 
-class NewLoginScreen extends StatefulWidget {
-  const NewLoginScreen({super.key});
+
+class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
 
   @override
-  State<NewLoginScreen> createState() => _NewLoginScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _NewLoginScreenState extends State<NewLoginScreen> {
-  final emailFocusNode = FocusNode();
-  final passwordFocusNode = FocusNode();
+class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
-  late LoginBloc _loginBloc;
+  late RegistrationBloc _registrationBloc;
 
   @override
   void initState() {
     super.initState();
-    _loginBloc = context.read<LoginBloc>();
-  }
-
-  @override
-  void dispose() {
-    emailFocusNode.dispose();
-    passwordFocusNode.dispose();
-    super.dispose();
+    _registrationBloc = context.read<RegistrationBloc>();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<LoginBloc, LoginState>(
+      appBar: AppBar(
+        title: const Text('Registration'),
+      ),
+      body: BlocListener<RegistrationBloc, RegistrationState>(
         listener: (context, state) {
-          if (state.status == LoginStatus.success) {
+          if (state.status == RegistrationStatus.success) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const ToDoAppScreen()),
+              MaterialPageRoute(builder: (context) => const NewLoginScreen()),
             );
-          } else if (state.status == LoginStatus.error) {
+          } else if (state.status == RegistrationStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
           }
         },
-        child: BlocBuilder<LoginBloc, LoginState>(
+        child: BlocBuilder<RegistrationBloc, RegistrationState>(
           builder: (context, state) {
             return Container(
               decoration: const BoxDecoration(
@@ -65,21 +59,9 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Center(
-                        child: Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.lightBlueAccent,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
                       TextFormField(
-                        focusNode: emailFocusNode,
                         onChanged: (value) {
-                          _loginBloc.add(EmailChanged(value));
+                          _registrationBloc.add(EmailChanged(value));
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -101,14 +83,12 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             borderSide: BorderSide(color: Colors.white, width: 3.0),
                           ),
                         ),
-                        style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        focusNode: passwordFocusNode,
                         obscureText: true,
                         onChanged: (value) {
-                          _loginBloc.add(PasswordChanged(value));
+                          _registrationBloc.add(PasswordChanged(value));
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -133,11 +113,15 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                         ),
-
-                        style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
+
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _registrationBloc.add(RegistrationSubmitted());
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
@@ -147,37 +131,11 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           ),
                           elevation: 5,
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _loginBloc.add(LoginSubmitted());
-                          }
-                        },
-                        child: state.status == LoginStatus.loading
+                        child: state.status == RegistrationStatus.loading
                             ? const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                            : const Text('Login'),
-                      ),
-                      const SizedBox(height: 10),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const RegistrationScreen()),
-                            );
-                          },
-                          child: const Text(
-                            'Don\'t have an account?',
-                            style: TextStyle(
-                              color: Colors.lightBlueAccent,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-
-                            ),
-                          ),
-                        ),
+                            : const Text('Register'),
                       ),
                     ],
                   ),

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
 import 'package:todoapptask/view/login_screen/login_screen.dart';
+import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
+import 'bloc/registration/registration_bloc.dart';
 import 'bloc/todoappbloc/todoapp_bloc.dart';
 import 'database_helper/database_helper.dart';
 
@@ -29,6 +31,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+
+        BlocProvider<RegistrationBloc>(
+          create: (context) => RegistrationBloc(
+            databaseHelper: TodoDatabaseHelper(),
+          ),
+        ),
         BlocProvider(
           create: (_) => LoginBloc(databaseHelper),
         ),
@@ -44,7 +52,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           brightness: Brightness.dark,
         ),
-        home: const NewLoginScreen(),
+        home:  const NewLoginScreen(),
       ),
     );
   }

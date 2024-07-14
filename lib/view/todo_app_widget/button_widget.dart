@@ -38,11 +38,13 @@ class AddTaskButton extends StatelessWidget {
     super.key,
     required TextEditingController titleController,
     required TextEditingController descriptionController,
+    required this.selectedDate,
   })  : _titleController = titleController,
         _descriptionController = descriptionController;
 
   final TextEditingController _titleController;
   final TextEditingController _descriptionController;
+  final DateTime? selectedDate;
 
   @override
   Widget build(BuildContext context) {

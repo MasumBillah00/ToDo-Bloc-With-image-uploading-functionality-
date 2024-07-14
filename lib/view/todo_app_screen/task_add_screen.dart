@@ -16,12 +16,28 @@ class TaskAddScreen extends StatefulWidget {
 class _TaskAddScreenState extends State<TaskAddScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  DateTime? _selectedDate;
 
   @override
   void dispose() {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  void _selectDate(BuildContext context) async {
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (selectedDate != null) {
+      setState(() {
+        _selectedDate = selectedDate;
+      });
+    }
   }
 
   @override
@@ -143,9 +159,33 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          _selectedDate == null
+                              ? 'No Date Chosen!'
+                              : 'Selected Date: ${_selectedDate!.toLocal()}'.split(' ')[0],
+                          style: TextStyle(
+                            color: Colors.amber[200],
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.calendar_month_outlined,
+                          color: Colors.amber.shade200,
+                          size: 25,
+                        ),
+                        onPressed: () => _selectDate(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   AddTaskButton(
                     titleController: _titleController,
                     descriptionController: _descriptionController,
+                    selectedDate: _selectedDate,
                   ),
                 ],
               ),
