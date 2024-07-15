@@ -59,12 +59,18 @@ class DeleteItem extends ToDoAppEvent {
 class HideItem extends ToDoAppEvent {
   final String id;
   final String value;
-  final String description; // Add description field
+  final String description;
+  final DateTime date;
 
-  const HideItem({required this.id, required this.value, required this.description});
+  const HideItem({
+    required this.id,
+    required this.value,
+    required this.description,
+    required this.date
+  });
 
   @override
-  List<Object?> get props => [id, value, description];
+  List<Object?> get props => [id, value, description,date];
 }
 
 class FetchHiddenTasks extends ToDoAppEvent {}

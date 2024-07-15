@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todoapptask/view/login_screen/login_screen.dart';
+import 'package:intl/intl.dart';
 import 'package:todoapptask/view/todo_app_screen/complete_task_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/deleted_item_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/favoruite_item_screen.dart';
@@ -9,6 +9,7 @@ import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../component/allert_dialog.dart';
 import '../component/icon_button_widget.dart';
+import '../login_registration/login_screen/login_screen.dart';
 import '../todo_app_widget/button_widget.dart';
 import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
@@ -59,6 +60,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                   itemBuilder: (context, index) {
                     final item = state.taskItemList[index];
                     final isSelected = state.selectedList.contains(item);
+                    String formattedDate = DateFormat.MMMd().format(item.date);
 
                     return Card(
                       color: Colors.grey[900],
@@ -77,9 +79,16 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             }
                           },
                         ),
-                        title: CustomText(
-                          text: item.value,
-                          isSelected: isSelected,
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomText(
+                              text: item.value,
+                              isSelected: isSelected,
+                            ),
+                            Text(formattedDate),
+
+                          ],
                         ),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -188,12 +197,15 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
   }
 
   void _showHideConfirmationDialog(BuildContext context, String taskId, String taskValue) {
+
+    final currentDate = DateTime.now();
     showConfirmationDialog(
       context: context,
       title: 'Confirm Delete',
       content: 'Are you sure you want to delete?',
       onConfirm: () {
-        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue, description: ''));
+        context.read<ToDoAppBloc>().add(
+            HideItem(id: taskId, value: taskValue, description: '',date: currentDate));
       },
     );
   }

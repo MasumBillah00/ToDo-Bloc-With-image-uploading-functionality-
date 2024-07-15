@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
-import 'package:todoapptask/view/login_screen/login_screen.dart';
+import 'package:todoapptask/view/login_registration/login_screen/login_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
+import 'bloc/forgot_password_bloc.dart';
 import 'bloc/registration/registration_bloc.dart';
 import 'bloc/todoappbloc/todoapp_bloc.dart';
 import 'database_helper/database_helper.dart';
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => ToDoAppBloc(ToDoAppRepository(databaseHelper)),
         ),
+        BlocProvider(
+          create: (context) => ForgotPasswordBloc(databaseHelper),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -51,6 +55,38 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           brightness: Brightness.dark,
+          primaryColor: Colors.blue,
+          scaffoldBackgroundColor: Colors.black,
+          // textTheme: TextTheme(
+          //   //bodyText1: TextStyle(color: Colors.white),
+          //   //bodyText2: TextStyle(color: Colors.white54),
+          //   //headline1: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          // ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.grey[800],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide.none,
+            ),
+            labelStyle: const TextStyle(color: Colors.white),
+            hintStyle: const TextStyle(color: Colors.white54),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.amber,
+              shadowColor: Colors.amberAccent,
+             // backgroundColor: Colors.black26,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.blue,
+            ),
+          ),
         ),
         home:  const NewLoginScreen(),
       ),

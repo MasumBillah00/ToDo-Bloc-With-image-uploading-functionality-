@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import '../../bloc/registration/registration_bloc.dart';
 import '../../bloc/registration/registration_event.dart';
 import '../../bloc/registration/registration_state.dart';
-import '../login_screen/login_screen.dart';
 
 
 class RegistrationScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           if (state.status == RegistrationStatus.success) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const NewLoginScreen()),
+              MaterialPageRoute(builder: (context) => const ToDoAppScreen()),
             );
           } else if (state.status == RegistrationStatus.error) {
             ScaffoldMessenger.of(context).showSnackBar(

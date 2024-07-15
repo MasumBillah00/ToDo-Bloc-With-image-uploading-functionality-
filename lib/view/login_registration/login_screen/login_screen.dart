@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todoapptask/view/registration_screen/registration_screen.dart';
-import '../../bloc/login/login_bloc.dart';
-import '../../bloc/login/login_event.dart';
-import '../../bloc/login/login_state.dart';
-import '../todo_app_screen/todo_app_screen.dart';
+import 'package:todoapptask/view/login_registration/forgot_password/forgot_password.dart';
+import '../../../bloc/login/login_bloc.dart';
+import '../../../bloc/login/login_event.dart';
+import '../../../bloc/login/login_state.dart';
+
+import '../../registration_screen/registration_screen.dart';
+import '../../todo_app_screen/todo_app_screen.dart';
 
 class NewLoginScreen extends StatefulWidget {
   const NewLoginScreen({super.key});
@@ -137,11 +139,12 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                         style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(height: 20),
+
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 150, vertical: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -156,26 +159,62 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             ? const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                            : const Text('Login'),
+                            : const Text('Log In',style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                        ),),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 5),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const RegistrationScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) =>  ForgotPasswordScreen()),
                             );
                           },
                           child: const Text(
-                            'Don\'t have an account?',
+                            'Forgot password?',
                             style: TextStyle(
                               color: Colors.lightBlueAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
 
                             ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const RegistrationScreen()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.green,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 5,
+                        ),
+                        child: const Text(
+                          'Create New account',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+
                           ),
                         ),
                       ),

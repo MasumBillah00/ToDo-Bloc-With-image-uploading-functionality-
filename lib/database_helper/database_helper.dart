@@ -19,7 +19,7 @@ class TodoDatabaseHelper {
     final path = join(await getDatabasesPath(), 'todo_database.db');
     return await openDatabase(
       path,
-      version: 2, // Increment version number for schema change
+      version: 3, // Increment version number for schema change
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -29,8 +29,9 @@ class TodoDatabaseHelper {
     await db.execute('''
       CREATE TABLE tasks(
         id TEXT PRIMARY KEY,
-        value TEXT UNIQUE,        
+        value TEXT UNIQUE,
         description TEXT,
+        date TEXT,
         isDeleting INTEGER,
         isFavourite INTEGER
       )
@@ -39,7 +40,8 @@ class TodoDatabaseHelper {
       CREATE TABLE users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        otp TEXT
       )
     ''');
   }
@@ -49,53 +51,20 @@ class TodoDatabaseHelper {
       await db.execute('''
         ALTER TABLE tasks ADD COLUMN description TEXT
       ''');
+    }
+    if (oldVersion < 3) {
+      await db.execute('''
+        ALTER TABLE tasks ADD COLUMN date TEXT
+      ''');
       await db.execute('''
         CREATE TABLE users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           email TEXT NOT NULL,
-          password TEXT NOT NULL
+          password TEXT NOT NULL,
+          otp TEXT
         )
       ''');
     }
-  }
-
-  Future<List<Map<String, dynamic>>> queryAllTasks() async {
-    Database db = await database;
-    return await db.query('tasks');
-  }
-
-  Future<Map<String, dynamic>?> queryTaskByTitle(String title) async {
-    Database db = await database;
-    List<Map<String, dynamic>> result = await db.query(
-      'tasks',
-      where: 'value = ?',
-      whereArgs: [title],
-    );
-    return result.isNotEmpty ? result.first : null;
-  }
-
-  Future<void> insertTask(Map<String, dynamic> task) async {
-    Database db = await database;
-    await db.insert('tasks', task, conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  Future<void> updateTask(Map<String, dynamic> task) async {
-    Database db = await database;
-    await db.update(
-      'tasks',
-      task,
-      where: 'id = ?',
-      whereArgs: [task['id']],
-    );
-  }
-
-  Future<void> deleteTask(String id) async {
-    Database db = await database;
-    await db.delete(
-      'tasks',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
   }
 
   // User-related methods
@@ -117,5 +86,75 @@ class TodoDatabaseHelper {
     } else {
       return null;
     }
+  }
+
+  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+    final db = await database;
+    final result = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<void> updateUserOtp(String email, String otp) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {'otp': otp},
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+  }
+
+  Future<void> updatePassword(String email, String password) async {
+    final db = await database;
+    await db.update(
+      'users',
+      {'password': password, 'otp': null},
+      where: 'email = ?',
+      whereArgs: [email],
+    );
+  }
+
+  // Task-related methods
+  Future<List<Map<String, dynamic>>> queryAllTasks() async {
+    final db = await database;
+    return await db.query('tasks');
+  }
+
+  Future<Map<String, dynamic>?> queryTaskByTitle(String title) async {
+    final db = await database;
+    final result = await db.query(
+      'tasks',
+      where: 'value = ?',
+      whereArgs: [title],
+    );
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<void> insertTask(Map<String, dynamic> task) async {
+    final db = await database;
+    await db.insert('tasks', task, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> updateTask(Map<String, dynamic> task) async {
+    final db = await database;
+    await db.update(
+      'tasks',
+      task,
+      where: 'id = ?',
+      whereArgs: [task['id']],
+    );
+  }
+
+  Future<void> deleteTask(String id) async {
+    final db = await database;
+    await db.delete(
+      'tasks',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }

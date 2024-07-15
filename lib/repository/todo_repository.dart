@@ -17,6 +17,7 @@ class ToDoAppRepository {
         'id': item.id,
         'value': item.value,
         'description': item.description,
+        'date': item.date.toIso8601String(),
         'isDeleting': item.isDeleting ? 1 : 0,
         'isFavourite': item.isFavourite ? 1 : 0,
       });
@@ -33,6 +34,7 @@ class ToDoAppRepository {
         id: maps[i]['id'],
         value: maps[i]['value'],
         description: maps[i]['description'],
+        date: DateTime.parse(maps[i]['date']),
         isDeleting: maps[i]['isDeleting'] == 1,
         isFavourite: maps[i]['isFavourite'] == 1,
       );

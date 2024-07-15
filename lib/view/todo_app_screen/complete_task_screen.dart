@@ -78,12 +78,13 @@ class CompleteTasksScreen extends StatelessWidget {
   }
 
   void _showHideConfirmationDialog(BuildContext context, String taskId, String taskValue) {
+    final currentDate = DateTime.now();
     showConfirmationDialog(
       context: context,
       title: 'Confirm Delete',
       content: 'Are you sure you want to delete?',
       onConfirm: () {
-        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue, description: ''));
+        context.read<ToDoAppBloc>().add(HideItem(id: taskId, value: taskValue, description: '', date: currentDate));
       },
     );
   }

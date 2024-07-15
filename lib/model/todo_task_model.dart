@@ -4,7 +4,7 @@ class TodoTaskModel extends Equatable {
   final String id;
   final String value;
   final String description;
-  //final DateTime date;
+  final DateTime date;
   final bool isFavourite;
   final bool isDeleting;
 
@@ -12,6 +12,7 @@ class TodoTaskModel extends Equatable {
     required this.id,
     required this.value,
     required this.description,
+    required this.date,
     this.isFavourite = false,
     this.isDeleting = false,
   });
@@ -20,6 +21,7 @@ class TodoTaskModel extends Equatable {
     String? id,
     String? value,
     String? description,
+    DateTime? date,
     bool? isFavourite,
     bool? isDeleting,
   }) {
@@ -27,6 +29,7 @@ class TodoTaskModel extends Equatable {
       id: id ?? this.id,
       value: value ?? this.value,
       description: description ?? this.description,
+      date: date ?? this.date,
       isFavourite: isFavourite ?? this.isFavourite,
       isDeleting: isDeleting ?? this.isDeleting,
     );
@@ -36,7 +39,8 @@ class TodoTaskModel extends Equatable {
     return TodoTaskModel(
       id: map['id'],
       value: map['value'],
-      description: map['description'], // Ensure this line is present
+      description: map['description'],
+      date: DateTime.parse(map['date']),
       isDeleting: map['isDeleting'] == 1,
       isFavourite: map['isFavourite'] == 1,
     );
@@ -46,12 +50,13 @@ class TodoTaskModel extends Equatable {
     return {
       'id': id,
       'value': value,
-      'description': description, // Ensure this line is present
+      'description': description,
+      'date': date.toIso8601String(),
       'isDeleting': isDeleting ? 1 : 0,
       'isFavourite': isFavourite ? 1 : 0,
     };
   }
 
   @override
-  List<Object?> get props => [id, value, description, isFavourite, isDeleting];
+  List<Object?> get props => [id, value, description, isFavourite, isDeleting,date];
 }

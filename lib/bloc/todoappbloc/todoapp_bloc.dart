@@ -99,11 +99,12 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
 
       final taskList = await toDoAppRepository.fetchItems();
       final hiddenItem = taskList.firstWhere(
-        (item) => item.id == event.id,
+            (item) => item.id == event.id,
         orElse: () => TodoTaskModel(
           id: event.id,
           value: event.value,
-          description: event.description, // Handle description
+          description: event.description,
+          date: event.date,
           isFavourite: false,
           isDeleting: true,
         ),
