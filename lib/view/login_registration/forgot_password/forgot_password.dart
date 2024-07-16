@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/view/login_registration/forgot_password/otp_screen.dart';
-import '../../../bloc/forgot_password_bloc.dart';
-import '../../../bloc/forgot_password_event.dart';
-import '../../../bloc/forgot_password_state.dart';
+import '../../../bloc/forgot_password/forgot_password_bloc.dart';
+import '../../../bloc/forgot_password/forgot_password_event.dart';
+import '../../../bloc/forgot_password/forgot_password_state.dart';
 
 
 class ForgotPasswordScreen extends StatelessWidget {

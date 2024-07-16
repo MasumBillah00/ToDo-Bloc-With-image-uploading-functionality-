@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:bloc/bloc.dart';
 
-import '../database_helper/database_helper.dart';
+import '../../database_helper/database_helper.dart';
 import 'forgot_password_event.dart';
 import 'forgot_password_state.dart';
 
@@ -23,7 +23,7 @@ class ForgotPasswordBloc extends Bloc<ForgotPasswordEvent, ForgotPasswordState> 
       if (user != null) {
         final otp = _generateOtp();
         await _databaseHelper.updateUserOtp(event.email, otp);
-        // Send OTP to email (mocked for this example)
+        // Print OTP to console for testing
         print('OTP sent to email: $otp');
         emit(ForgotPasswordEmailSent());
       } else {

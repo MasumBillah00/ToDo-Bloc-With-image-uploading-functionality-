@@ -69,6 +69,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: ListTile(
+
                         leading: Checkbox(
                           value: isSelected,
                           onChanged: (bool? value) {
@@ -111,12 +112,14 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                                 _showHideConfirmationDialog(context, item.id, item.value);
                               },
                             ),
+
                           ],
                         ),
                         subtitle: DCustomText(
                           text: item.description,
                           isSelected: isSelected,
                         ),
+
                       ),
                     );
                   },

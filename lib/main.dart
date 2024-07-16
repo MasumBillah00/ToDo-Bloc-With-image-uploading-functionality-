@@ -4,7 +4,7 @@ import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
 import 'package:todoapptask/view/login_registration/login_screen/login_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
-import 'bloc/forgot_password_bloc.dart';
+import 'bloc/forgot_password/forgot_password_bloc.dart';
 import 'bloc/registration/registration_bloc.dart';
 import 'bloc/todoappbloc/todoapp_bloc.dart';
 import 'database_helper/database_helper.dart';
@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-
         BlocProvider<RegistrationBloc>(
           create: (context) => RegistrationBloc(
             databaseHelper: TodoDatabaseHelper(),
@@ -57,11 +56,6 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.dark,
           primaryColor: Colors.blue,
           scaffoldBackgroundColor: Colors.black,
-          // textTheme: TextTheme(
-          //   //bodyText1: TextStyle(color: Colors.white),
-          //   //bodyText2: TextStyle(color: Colors.white54),
-          //   //headline1: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-          // ),
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
             fillColor: Colors.grey[800],
@@ -76,7 +70,6 @@ class MyApp extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.amber,
               shadowColor: Colors.amberAccent,
-             // backgroundColor: Colors.black26,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
@@ -88,7 +81,11 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home:  const NewLoginScreen(),
+        initialRoute: '/login',
+        routes: {
+          '/login': (context) => NewLoginScreen(),
+          '/todo': (context) => ToDoAppScreen(),
+        },
       ),
     );
   }
