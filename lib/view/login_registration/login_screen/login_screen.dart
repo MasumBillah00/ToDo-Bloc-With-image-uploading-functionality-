@@ -1,37 +1,115 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todoapptask/view/login_registration/forgot_password/forgot_password.dart';
 import '../../../bloc/login/login_bloc.dart';
 import '../../../bloc/login/login_event.dart';
 import '../../../bloc/login/login_state.dart';
-
+import '../../../database_helper/database_helper.dart';
 import '../../registration_screen/registration_screen.dart';
 import '../../todo_app_screen/todo_app_screen.dart';
 
-class NewLoginScreen extends StatefulWidget {
-  const NewLoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<NewLoginScreen> createState() => _NewLoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _NewLoginScreenState extends State<NewLoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
   late LoginBloc _loginBloc;
+  bool _rememberMe = false;
+  String? _savedPassword;
+  bool _showPasswordDialog = true;
+  bool _isPasswordVisible = false;
 
   @override
   void initState() {
     super.initState();
     _loginBloc = context.read<LoginBloc>();
+    _loadRememberMe();
+    emailController.addListener(_handleUserInteraction);
+    passwordController.addListener(_handleUserInteraction);
   }
 
   @override
   void dispose() {
+    emailController.removeListener(_handleUserInteraction);
+    passwordController.removeListener(_handleUserInteraction);
+    emailController.dispose();
+    passwordController.dispose();
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
     super.dispose();
+  }
+
+  void _handleUserInteraction() {
+    if (_showPasswordDialog) {
+      _showPasswordDialog = false;
+      _showPasswordNotification();
+    }
+  }
+
+  void _loadRememberMe() async {
+    final rememberMeInfo = await TodoDatabaseHelper().loadRememberMe();
+    if (rememberMeInfo != null && rememberMeInfo['remember_me'] == 1) {
+      emailController.text = rememberMeInfo['email'];
+      _savedPassword = rememberMeInfo['password'];
+      setState(() {
+        _rememberMe = true;
+      });
+      // Trigger BLoC events for initial values
+      _loginBloc.add(EmailChanged(emailController.text));
+      _loginBloc.add(PasswordChanged(_savedPassword ?? ''));
+    }
+  }
+
+  void _saveRememberMe() async {
+    if (_rememberMe) {
+      await TodoDatabaseHelper().saveRememberMe(
+        emailController.text,
+        passwordController.text,
+        _rememberMe,
+      );
+    } else {
+      await TodoDatabaseHelper().clearRememberMe();
+    }
+  }
+
+  void _showPasswordNotification() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Auto-fill Password?'),
+          content: Text('Do you want to fill in the saved password for ${emailController.text}?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                if (_savedPassword != null) {
+                  passwordController.text = _savedPassword!;
+                  _loginBloc.add(PasswordChanged(_savedPassword!));
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -40,6 +118,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
       body: BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state.status == LoginStatus.success) {
+            _saveRememberMe();
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const ToDoAppScreen()),
@@ -79,6 +158,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                       ),
                       const SizedBox(height: 30),
                       TextFormField(
+                        controller: emailController,
                         focusNode: emailFocusNode,
                         onChanged: (value) {
                           _loginBloc.add(EmailChanged(value));
@@ -105,10 +185,11 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                         ),
                         style: const TextStyle(color: Colors.white),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       TextFormField(
+                        controller: passwordController,
                         focusNode: passwordFocusNode,
-                        obscureText: true,
+                        obscureText: !_isPasswordVisible,
                         onChanged: (value) {
                           _loginBloc.add(PasswordChanged(value));
                         },
@@ -120,26 +201,61 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Enter your password',
-                          prefixIcon: Icon(Icons.lock, color: Colors.white),
-                          hintStyle: TextStyle(color: Colors.white54),
-                          enabledBorder: OutlineInputBorder(
+                          prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                          hintStyle: const TextStyle(color: Colors.white54),
+                          enabledBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white, width: 2.0),
                             borderRadius: BorderRadius.all(Radius.circular(10.0)),
                           ),
-                          focusedBorder: OutlineInputBorder(
+                          focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white, width: 3.0),
                           ),
-                          border: OutlineInputBorder(
+                          border: const OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                  if (_isPasswordVisible) {
+                                    Timer(const Duration(milliseconds: 400),
+                                            () {
+                                      setState(() {
+                                        _isPasswordVisible = false;
+                                      });
+                                    });
+                                  }
+                                });
+                              }
+                          ),
                         ),
-
                         style: const TextStyle(color: Colors.white),
                       ),
+                      const SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Checkbox(
+                            value: _rememberMe,
+                            onChanged: (value) {
+                              setState(() {
+                                _rememberMe = value ?? false;
+                              });
+                            },
+                          ),
+                          const Text(
+                            'Remember Me',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 20),
-
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           foregroundColor: Colors.white,
@@ -159,10 +275,13 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                             ? const CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                         )
-                            : const Text('Log In',style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                        ),),
+                            : const Text(
+                          'Log In',
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 5),
                       Align(
@@ -171,8 +290,7 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                  builder: (context) =>  ForgotPasswordScreen()),
+                              MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
                             );
                           },
                           child: const Text(
@@ -181,14 +299,11 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                               color: Colors.lightBlueAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 16,
-
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.push(
@@ -200,21 +315,18 @@ class _NewLoginScreenState extends State<NewLoginScreen> {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.green,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
+                            horizontal: 20,
+                            vertical: 10,
                           ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          elevation: 5,
                         ),
                         child: const Text(
-                          'Create New account',
+                          'Create an Account',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

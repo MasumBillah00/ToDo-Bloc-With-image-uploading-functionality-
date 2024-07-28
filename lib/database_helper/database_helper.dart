@@ -19,7 +19,7 @@ class TodoDatabaseHelper {
     final path = join(await getDatabasesPath(), 'todo_database.db');
     return await openDatabase(
       path,
-      version: 3, // Increment version number for schema change
+      version: 4, // Increment version number for schema change
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -44,6 +44,13 @@ class TodoDatabaseHelper {
         otp TEXT
       )
     ''');
+    await db.execute('''
+      CREATE TABLE remember_me(
+        email TEXT PRIMARY KEY,
+        password TEXT,
+        remember_me INTEGER
+      )
+    ''');
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -62,6 +69,15 @@ class TodoDatabaseHelper {
           email TEXT NOT NULL,
           password TEXT NOT NULL,
           otp TEXT
+        )
+      ''');
+    }
+    if (oldVersion < 4) {
+      await db.execute('''
+        CREATE TABLE remember_me(
+          email TEXT PRIMARY KEY,
+          password TEXT,
+          remember_me INTEGER
         )
       ''');
     }
@@ -116,6 +132,26 @@ class TodoDatabaseHelper {
       where: 'email = ?',
       whereArgs: [email],
     );
+  }
+
+  Future<void> saveRememberMe(String email, String password, bool rememberMe) async {
+    final db = await database;
+    await db.insert(
+      'remember_me',
+      {'email': email, 'password': password, 'remember_me': rememberMe ? 1 : 0},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<Map<String, dynamic>?> loadRememberMe() async {
+    final db = await database;
+    final result = await db.query('remember_me');
+    return result.isNotEmpty ? result.first : null;
+  }
+
+  Future<void> clearRememberMe() async {
+    final db = await database;
+    await db.delete('remember_me');
   }
 
   // Task-related methods

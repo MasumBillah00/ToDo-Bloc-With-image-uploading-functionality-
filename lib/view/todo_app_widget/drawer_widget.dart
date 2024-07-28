@@ -111,7 +111,7 @@ class ToDo_Drawer extends StatelessWidget {
                     context.read<LoginBloc>().add(Logout());
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const NewLoginScreen()),
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
                     );
                   },
                 ),

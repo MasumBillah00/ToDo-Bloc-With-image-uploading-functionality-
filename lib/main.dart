@@ -33,8 +33,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<RegistrationBloc>(
-          create: (context) => RegistrationBloc(
-            databaseHelper: TodoDatabaseHelper(),
+          create: (context) => RegistrationBloc(databaseHelper: TodoDatabaseHelper(),
           ),
         ),
         BlocProvider(
@@ -83,7 +82,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/login',
         routes: {
-          '/login': (context) => NewLoginScreen(),
+          '/login': (context) => LoginScreen(),
           '/todo': (context) => ToDoAppScreen(),
         },
       ),
