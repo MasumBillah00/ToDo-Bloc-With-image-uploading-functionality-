@@ -17,6 +17,7 @@ class ToDoAppRepository {
         'id': item.id,
         'value': item.value,
         'description': item.description,
+        'image':item.image,
         'date': item.date.toIso8601String(),
         'isDeleting': item.isDeleting ? 1 : 0,
         'isFavourite': item.isFavourite ? 1 : 0,
@@ -37,6 +38,7 @@ class ToDoAppRepository {
         date: DateTime.parse(maps[i]['date']),
         isDeleting: maps[i]['isDeleting'] == 1,
         isFavourite: maps[i]['isFavourite'] == 1,
+        image: maps[i]['image'],
       );
     }).where((task) => includeDeleted || !task.isDeleting).toList();
   }

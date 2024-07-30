@@ -33,65 +33,18 @@ class FloatingActionButtonWidget extends StatelessWidget {
   }
 }
 
-// class AddTaskButton extends StatelessWidget {
-//   const AddTaskButton({
-//     super.key,
-//     required TextEditingController titleController,
-//     required TextEditingController descriptionController,
-//     required this.selectedDate,
-//   })  : _titleController = titleController,
-//         _descriptionController = descriptionController;
-//
-//   final TextEditingController _titleController;
-//   final TextEditingController _descriptionController;
-//   final DateTime? selectedDate;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ElevatedButton(
-//       onPressed: () {
-//         final taskValue = _titleController.text;
-//         final taskDescription = _descriptionController.text;
-//         if (taskValue.isNotEmpty) {
-//           final newTask = TodoTaskModel(
-//             id: DateTime.now().toString(),
-//             value: taskValue,
-//             description: taskDescription,
-//           );
-//           context.read<ToDoAppBloc>().add(AddTaskItem(item: newTask));
-//         }
-//       },
-//       style: ElevatedButton.styleFrom(
-//         foregroundColor: Colors.amber,
-//         shadowColor: Colors.amberAccent,
-//
-//         elevation: 8,
-//         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         textStyle: const TextStyle(
-//           fontSize: 20,
-//           fontWeight: FontWeight.w600,
-//         ),
-//       ),
-//       child: const Text('Add Task'),
-//     );
-//   }
-// }
-
-
-
 class AddTaskButton extends StatelessWidget {
   final TextEditingController titleController;
   final TextEditingController descriptionController;
   final DateTime? selectedDate;
+  final String? image;
 
   const AddTaskButton({
     Key? key,
     required this.titleController,
     required this.descriptionController,
     this.selectedDate,
+    this.image,
   }) : super(key: key);
 
   @override
@@ -107,9 +60,13 @@ class AddTaskButton extends StatelessWidget {
             value: title,
             description: description,
             date: selectedDate!,
+            image: image ?? '',
           );
 
           context.read<ToDoAppBloc>().add(AddTaskItem(item: newTask));
+
+          // Pop the current screen and navigate back to the ToDoAppScreen
+          Navigator.popUntil(context, (route) => route.isFirst);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -118,8 +75,55 @@ class AddTaskButton extends StatelessWidget {
           );
         }
       },
-      child: const Text('Add Task'),
+      child: const Text('Add Task', style: TextStyle(fontSize: 20)),
     );
   }
 }
 
+
+// class AddTaskButton extends StatelessWidget {
+//   final TextEditingController titleController;
+//   final TextEditingController descriptionController;
+//   final DateTime? selectedDate;
+//   final String? image;
+//
+//   const AddTaskButton({
+//     Key? key,
+//     required this.titleController,
+//     required this.descriptionController,
+//     this.selectedDate,
+//     this.image,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return ElevatedButton(
+//       onPressed: () {
+//         final title = titleController.text;
+//         final description = descriptionController.text;
+//
+//         if (title.isNotEmpty && description.isNotEmpty && selectedDate != null) {
+//           final newTask = TodoTaskModel(
+//             id: DateTime.now().toString(),
+//             value: title,
+//             description: description,
+//             date: selectedDate!,
+//             image: image ??'',
+//           );
+//
+//           context.read<ToDoAppBloc>().add(AddTaskItem(item: newTask));
+//           Navigator.of(context).pop(); // Close the screen after adding the task
+//         } else {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             const SnackBar(
+//               content: Text('Please fill all fields and select a date'),
+//             ),
+//           );
+//         }
+//       },
+//       child: const Text('Add Task',style: TextStyle(
+//         fontSize: 20
+//       ),),
+//     );
+//   }
+// }

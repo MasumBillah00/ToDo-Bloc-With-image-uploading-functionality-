@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import '../login_registration/login_screen/login_screen.dart';
 import '../todo_app_widget/button_widget.dart';
 import '../todo_app_widget/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
+
 
 class ToDoAppScreen extends StatefulWidget {
   const ToDoAppScreen({super.key});
@@ -69,7 +71,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: ListTile(
-
                         leading: Checkbox(
                           value: isSelected,
                           onChanged: (bool? value) {
@@ -80,15 +81,31 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                             }
                           },
                         ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomText(
-                              text: item.value,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomText(
+                                  text: item.value,
+                                  isSelected: isSelected,
+                                ),
+                                Text(formattedDate),
+                              ],
+                            ),
+                            const SizedBox(height: 5),
+                            DCustomText(
+                              text: item.description,
                               isSelected: isSelected,
                             ),
-                            Text(formattedDate),
-
+                            if (item.image.isNotEmpty) ...[
+                              const SizedBox(height: 10),
+                              Image.file(
+                                File(item.image),
+                                height: 200,
+                              ),
+                            ],
                           ],
                         ),
                         trailing: Row(
@@ -112,14 +129,8 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                                 _showHideConfirmationDialog(context, item.id, item.value);
                               },
                             ),
-
                           ],
                         ),
-                        subtitle: DCustomText(
-                          text: item.description,
-                          isSelected: isSelected,
-                        ),
-
                       ),
                     );
                   },
@@ -140,15 +151,15 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         child: Scaffold(
           appBar: _selectedIndex == 0
               ? AppBar(
-                  title: const Text(
-                    'TODO APP',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 30,
-                    ),
-                  ),
-                  centerTitle: true,
-                )
+            title: const Text(
+              'TODO APP',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 30,
+              ),
+            ),
+            centerTitle: true,
+          )
               : null,
           drawer: ToDo_Drawer(onItemTapped: _onItemTapped),
           body: BlocConsumer<ToDoAppBloc, TodoappState>(
@@ -200,7 +211,6 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
   }
 
   void _showHideConfirmationDialog(BuildContext context, String taskId, String taskValue) {
-
     final currentDate = DateTime.now();
     showConfirmationDialog(
       context: context,
@@ -208,7 +218,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
       content: 'Are you sure you want to delete?',
       onConfirm: () {
         context.read<ToDoAppBloc>().add(
-            HideItem(id: taskId, value: taskValue, description: '',date: currentDate));
+            HideItem(id: taskId, value: taskValue, description: '', date: currentDate));
       },
     );
   }

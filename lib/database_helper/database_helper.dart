@@ -19,11 +19,12 @@ class TodoDatabaseHelper {
     final path = join(await getDatabasesPath(), 'todo_database.db');
     return await openDatabase(
       path,
-      version: 4, // Increment version number for schema change
+      version: 5, // Increment version number for schema change
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
   }
+
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
@@ -32,6 +33,7 @@ class TodoDatabaseHelper {
         value TEXT UNIQUE,
         description TEXT,
         date TEXT,
+        image TEXT, 
         isDeleting INTEGER,
         isFavourite INTEGER
       )
@@ -81,9 +83,14 @@ class TodoDatabaseHelper {
         )
       ''');
     }
+    if (oldVersion < 5) {
+      await db.execute('''
+        ALTER TABLE tasks ADD COLUMN image TEXT
+      ''');
+    }
   }
 
-  // User-related methods
+
   Future<void> insertUser(String email, String password) async {
     final db = await database;
     await db.insert('users', {'email': email, 'password': password});

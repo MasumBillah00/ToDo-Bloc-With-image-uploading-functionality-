@@ -104,6 +104,8 @@ class ToDoAppBloc extends Bloc<ToDoAppEvent, TodoappState> {
           id: event.id,
           value: event.value,
           description: event.description,
+
+
           date: event.date,
           isFavourite: false,
           isDeleting: true,
