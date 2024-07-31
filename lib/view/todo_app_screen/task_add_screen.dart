@@ -77,157 +77,159 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
           builder: (context, state) {
             return BlocBuilder<ImagePickerBloc, ImagePickerState>(
                 builder: (context, imagePickerState) {
-                  return Container(
-                    color: Colors.black.withOpacity(.2),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15, right: 15, left: 15,),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextField(
-                              controller: _titleController,
-                              decoration: InputDecoration(
-                                labelText: 'Task',
-                                labelStyle: TextStyle(
-                                  color: Colors.amber[200],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                hintText: 'Enter your task',
-                                hintStyle: TextStyle(
-                                  color: Colors.amber[200],
-                                ),
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.amber.shade200,
-                                    width: 3.0,
+                  return SingleChildScrollView(
+                    child: Container(
+                      color: Colors.black.withOpacity(.2),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15, right: 15, left: 15,),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextField(
+                                controller: _titleController,
+                                decoration: InputDecoration(
+                                  labelText: 'Task',
+                                  labelStyle: TextStyle(
+                                    color: Colors.amber[200],
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.amber.shade200,
-                                    width: 2.0,
+                                  hintText: 'Enter your task',
+                                  hintStyle: TextStyle(
+                                    color: Colors.amber[200],
                                   ),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.task,
-                                  color: Colors.amber.shade200,
-                                ),
-                              ),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            TextField(
-                              controller: _descriptionController,
-                              decoration: InputDecoration(
-                                labelText: 'Description',
-                                labelStyle: TextStyle(
-                                  color: Colors.amber[200],
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                hintText: 'Enter task description',
-                                hintStyle: TextStyle(
-                                  color: Colors.amber[200],
-                                ),
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.amber.shade200,
-                                    width: 3.0,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
                                   ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(
-                                    color: Colors.amber.shade200,
-                                    width: 2.0,
-                                  ),
-                                ),
-                                prefixIcon: Icon(
-                                  Icons.description,
-                                  color: Colors.amber.shade200,
-                                ),
-                              ),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                        
-                            const SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    _selectedDate == null
-                                        ? 'No Date Chosen!'
-                                        : 'Selected Date: ${_selectedDate!.toLocal()}'.split(' ')[0],
-                                    style: TextStyle(
-                                        color: Colors.amber[200],
-                                        fontSize: 16
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber.shade200,
+                                      width: 3.0,
                                     ),
                                   ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.calendar_month_outlined,
-                                    color: Colors.amber.shade200,
-                                    size: 50,
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber.shade200,
+                                      width: 2.0,
+                                    ),
                                   ),
-                                  onPressed: () => _selectDate(context),
+                                  prefixIcon: Icon(
+                                    Icons.task,
+                                    color: Colors.amber.shade200,
+                                  ),
                                 ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                        
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<ImagePickerBloc>().add(GalleryPicker());
-                              },
-                              child: const Text('Pick Image from Gallery',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),),
-                            ),
-                            SizedBox(height: 10,),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<ImagePickerBloc>().add(CameraCapture());
-                              },
-                              child: const Text('Capture Image',
-                                style:TextStyle(
-                                    fontSize: 20
-                                ) ,),
-                            ),
-                        
-                        
-                            const SizedBox(height: 20),
-                            if (imagePickerState.file != null)
-                              Image.file(
-                                File(imagePickerState.file!.path),
-                                height: 80,
-                                width: 80,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            AddTaskButton(
-                              titleController: _titleController,
-                              descriptionController: _descriptionController,
-                              selectedDate: _selectedDate,
-                              image: imagePickerState.file?.path,
-                            ),
-                          ],
+                              const SizedBox(height: 20),
+                              TextField(
+                                controller: _descriptionController,
+                                decoration: InputDecoration(
+                                  labelText: 'Description',
+                                  labelStyle: TextStyle(
+                                    color: Colors.amber[200],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  hintText: 'Enter task description',
+                                  hintStyle: TextStyle(
+                                    color: Colors.amber[200],
+                                  ),
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber.shade200,
+                                      width: 3.0,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide(
+                                      color: Colors.amber.shade200,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.description,
+                                    color: Colors.amber.shade200,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                          
+                              const SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      _selectedDate == null
+                                          ? 'No Date Chosen!'
+                                          : 'Selected Date: ${_selectedDate!.toLocal()}'.split(' ')[0],
+                                      style: TextStyle(
+                                          color: Colors.amber[200],
+                                          fontSize: 16
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.calendar_month_outlined,
+                                      color: Colors.amber.shade200,
+                                      size: 50,
+                                    ),
+                                    onPressed: () => _selectDate(context),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                          
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<ImagePickerBloc>().add(GalleryPicker());
+                                },
+                                child: const Text('Pick Image from Gallery',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),),
+                              ),
+                              SizedBox(height: 10,),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<ImagePickerBloc>().add(CameraCapture());
+                                },
+                                child: const Text('Capture Image',
+                                  style:TextStyle(
+                                      fontSize: 20
+                                  ) ,),
+                              ),
+                          
+                          
+                              const SizedBox(height: 20),
+                              if (imagePickerState.file != null)
+                                Image.file(
+                                  File(imagePickerState.file!.path),
+                                  height: 80,
+                                  width: 80,
+                                ),
+                              AddTaskButton(
+                                titleController: _titleController,
+                                descriptionController: _descriptionController,
+                                selectedDate: _selectedDate,
+                                image: imagePickerState.file?.path,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

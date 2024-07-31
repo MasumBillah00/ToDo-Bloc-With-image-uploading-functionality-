@@ -50,13 +50,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleUserInteraction() {
-    if (_showPasswordDialog) {
+    if (_showPasswordDialog && _savedPassword != null) {
       _showPasswordDialog = false;
       _showPasswordNotification();
     }
   }
 
   void _loadRememberMe() async {
+    final isFirstTime = await TodoDatabaseHelper().isFirstTime();
     final rememberMeInfo = await TodoDatabaseHelper().loadRememberMe();
     if (rememberMeInfo != null && rememberMeInfo['remember_me'] == 1) {
       emailController.text = rememberMeInfo['email'];
@@ -67,7 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
       // Trigger BLoC events for initial values
       _loginBloc.add(EmailChanged(emailController.text));
       _loginBloc.add(PasswordChanged(_savedPassword ?? ''));
+
+      if (!isFirstTime) {
+        _showPasswordNotification();
+      }
     }
+    // Update the first-time flag after checking
+    await TodoDatabaseHelper().saveFirstTimeFlag(false);
   }
 
   void _saveRememberMe() async {
@@ -111,6 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -278,7 +286,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             : const Text(
                           'Log In',
                           style: TextStyle(
-                            fontSize: 25,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

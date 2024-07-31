@@ -100,10 +100,11 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
                               isSelected: isSelected,
                             ),
                             if (item.image.isNotEmpty) ...[
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 5),
                               Image.file(
                                 File(item.image),
-                                height: 200,
+                                height: 180,
+
                               ),
                             ],
                           ],

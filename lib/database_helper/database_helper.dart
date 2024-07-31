@@ -19,12 +19,11 @@ class TodoDatabaseHelper {
     final path = join(await getDatabasesPath(), 'todo_database.db');
     return await openDatabase(
       path,
-      version: 5, // Increment version number for schema change
+      version: 6, // Increment version number for schema change
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
   }
-
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
@@ -51,6 +50,12 @@ class TodoDatabaseHelper {
         email TEXT PRIMARY KEY,
         password TEXT,
         remember_me INTEGER
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE app_info(
+        key TEXT PRIMARY KEY,
+        value INTEGER
       )
     ''');
   }
@@ -88,8 +93,15 @@ class TodoDatabaseHelper {
         ALTER TABLE tasks ADD COLUMN image TEXT
       ''');
     }
+    if (oldVersion < 6) {
+      await db.execute('''
+        CREATE TABLE app_info(
+          key TEXT PRIMARY KEY,
+          value INTEGER
+        )
+      ''');
+    }
   }
-
 
   Future<void> insertUser(String email, String password) async {
     final db = await database;
@@ -159,6 +171,29 @@ class TodoDatabaseHelper {
   Future<void> clearRememberMe() async {
     final db = await database;
     await db.delete('remember_me');
+  }
+
+  // Methods to manage the first-time flag
+  Future<void> saveFirstTimeFlag(bool isFirstTime) async {
+    final db = await database;
+    await db.insert(
+      'app_info',
+      {'key': 'is_first_time', 'value': isFirstTime ? 1 : 0},
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<bool> isFirstTime() async {
+    final db = await database;
+    final result = await db.query(
+      'app_info',
+      where: 'key = ?',
+      whereArgs: ['is_first_time'],
+    );
+    if (result.isNotEmpty) {
+      return result.first['value'] == 1;
+    }
+    return true; // Default to true if not set
   }
 
   // Task-related methods
