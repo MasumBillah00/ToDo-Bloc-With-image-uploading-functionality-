@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
-import '../todo_app_widget/component_widget.dart';
+import '../component/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class FavouriteScreen extends StatelessWidget {
@@ -43,6 +46,8 @@ class FavouriteScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final item = state.favouriteList[index];
                       final isSelected = state.selectedList.contains(item);
+                      String formattedDate = DateFormat.MMMd().format(item.date);
+
                       return Card(
                         color: Colors.grey[800],
                         elevation: 4,
@@ -50,13 +55,84 @@ class FavouriteScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ListTile(
-                          title: CustomText(
-                            text: item.value,
+                          // title: CustomText(
+                          //   text: item.value,
+                          // ),
+                          // subtitle: DCustomText(
+                          //   text: item.description,
+                          //   isSelected: isSelected,
+                          // ),
+                          title: Column(
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomText(
+                                    text: item.value,
+                                    isSelected: isSelected,
+
+                                  ),
+                                  Text(formattedDate),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              // DCustomText(
+                              //   text: item.description,
+                              //   isSelected: isSelected,
+                              // ),
+                              // if (item.image.isNotEmpty) ...[
+                              //   const SizedBox(height: 5),
+                              //   Image.file(
+                              //     File(item.image),
+                              //     height: 180,
+                              //
+                              //   ),
+                              // ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 155,
+                                    child: DCustomText(
+                                      text: item.description,
+                                      isSelected: isSelected,
+                                      showSeeMore: true,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10,),
+
+                                  if (item.image.isNotEmpty) ...[
+                                    const SizedBox(height: 5),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Container(
+                                        height: 150,
+                                        width: 140,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12), // Adjust the border radius as needed
+                                          border: Border.all(
+                                            color: Colors.blue, // Set the border color
+                                            width: 2, // Set the border width
+                                          ),
+                                          shape: BoxShape.rectangle, // Can be BoxShape.circle for circular images
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(12), // Match the border radius here
+                                          child: Image.file(
+                                            File(item.image),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+                                ],
+                              ),
+                            ],
                           ),
-                          subtitle: DCustomText(
-                            text: item.description,
-                            isSelected: isSelected,
-                          ),
+
                         ),
                       );
                     },

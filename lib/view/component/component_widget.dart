@@ -49,14 +49,17 @@ class CustomText extends StatelessWidget {
   }
 }
 
+
 class DCustomText extends StatefulWidget {
   final String text;
   final bool isSelected;
+  final bool showSeeMore; // New parameter
 
   const DCustomText({
     super.key,
     required this.text,
     this.isSelected = false,
+    this.showSeeMore = true, // Default value to true
   });
 
   @override
@@ -66,23 +69,34 @@ class DCustomText extends StatefulWidget {
 class _DCustomTextState extends State<DCustomText> {
   bool _isExpanded = false;
 
+  String _formatText(List<String> words) {
+    String formattedText = '';
+    for (int i = 0; i < words.length; i++) {
+      if (i > 0 && i % 3 == 0) {
+        formattedText += '\n';
+      }
+      formattedText += words[i] + ' ';
+    }
+    return formattedText.trim();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<String> words = widget.text.split(' ');
-    String displayText = words.take(2).join(' '); // Display first two words initially
+    String displayText = _isExpanded ? widget.text : _formatText(words.take(3).toList());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          _isExpanded ? widget.text : displayText,
+          displayText,
           style: TextStyle(
             color: widget.isSelected ? Colors.amber.shade100 : Colors.white70,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
-        if (words.length > 2) // Display 'See more' button if more than two words
+        if (widget.showSeeMore && words.length > 3)
           TextButton(
             onPressed: () {
               setState(() {
@@ -98,3 +112,4 @@ class _DCustomTextState extends State<DCustomText> {
     );
   }
 }
+

@@ -76,6 +76,17 @@ class AddTaskButton extends StatelessWidget {
         }
       },
       child: const Text('Add Task', style: TextStyle(fontSize: 20)),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.amber,  // Text color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10), // Rounded corners
+        ),
+        padding: const EdgeInsets.symmetric(
+            vertical: 14.0,
+            horizontal: 40.0), // Padding inside the button
+        elevation: 5, // Shadow effect
+        side: BorderSide(color: Colors.amber.shade700, width: .1), // Border
+      ),
     );
   }
 }

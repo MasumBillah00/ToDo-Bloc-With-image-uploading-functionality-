@@ -4,8 +4,8 @@ import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../component/allert_dialog.dart';
-import '../component/icon_button_widget.dart';
-import '../todo_app_widget/component_widget.dart';
+import '../todo_app_widget/icon_button_widget.dart';
+import '../component/component_widget.dart';
 import '../todo_app_widget/drawer_widget.dart';
 
 class DeletedItemScreen extends StatelessWidget {
