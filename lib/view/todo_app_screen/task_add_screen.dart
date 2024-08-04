@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import '../../bloc/imagepicker/imagepicker_bloc.dart';
+import '../../bloc/imagepicker/imagepicker_event.dart'; // Import the events
 import '../../bloc/imagepicker/imagepicker_state.dart';
 import '../../bloc/todoappbloc/todoapp_bloc.dart';
 import '../../bloc/todoappbloc/todoapp_event.dart';
@@ -22,8 +24,6 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _selectedDate;
-  //XFile? _selectedImage;
-  //String? _selectedImageOption;
 
   @override
   void dispose() {
@@ -56,8 +56,11 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              context.read<ToDoAppBloc>().add(ClearErrorEvent());
-              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const ToDoAppScreen(),
+                ),
+              );
             },
           ),
         ),
@@ -72,92 +75,102 @@ class _TaskAddScreenState extends State<TaskAddScreen> {
                 ),
               );
             } else if (state.listStatus == ListStatus.success) {
+              context
+                  .read<ToDoAppBloc>()
+                  .add(FetchTaskList()); // Re-fetch tasks
               Navigator.popUntil(context, (route) => route.isFirst);
             }
           },
           builder: (context, state) {
             return BlocBuilder<ImagePickerBloc, ImagePickerState>(
-                builder: (context, imagePickerState) {
-                  return SingleChildScrollView(
-                    child: Container(
-                      color: Colors.black.withOpacity(.2),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 15,
-                          right: 15,
-                          left: 15,
-                        ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      _selectedDate == null
-                                          ? ''
-                                          : 'Selected Date: ${_selectedDate!.toLocal()}'
-                                          .split(' ')[0],
-                                    ),
+              builder: (context, imagePickerState) {
+                return SingleChildScrollView(
+                  child: Container(
+                    color: Colors.black.withOpacity(.2),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 15,
+                        right: 15,
+                        left: 15,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    _selectedDate == null
+                                        ? ''
+                                        : 'Selected Date: ${_selectedDate!.toLocal()}'
+                                            .split(' ')[0],
                                   ),
-                                  // GestureDetector(
-                                  //   onTap: () => _selectDate(context),
-                                  //   child: Image.asset(
-                                  //     'assets/images/calendar.png', // Path to your image asset
-                                  //     height: 50, // Set the desired height
-                                  //     width: 50,  // Set the desired width
-                                  //   ),
-                                  // ),
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.calendar_month_outlined,
-                                      color: Colors.amber.shade200,
-                                      size: 50,
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.calendar_month_outlined,
+                                    color: Colors.amber.shade200,
+                                    size: 50,
+                                  ),
+                                  onPressed: () => _selectDate(context),
+                                ),
+                              ],
+                            ),
+                            CustomTextField(
+                              controller: _titleController,
+                              labelText: 'Task',
+                              hintText: 'Enter your task',
+                              icon: Icons.task,
+                            ),
+                            const SizedBox(height: 20),
+                            CustomTextField(
+                              controller: _descriptionController,
+                              labelText: 'Description',
+                              hintText: 'Enter task description',
+                              icon: Icons.description,
+                            ),
+                            const SizedBox(height: 20),
+                            const CustomDropdownButton(),
+                            const SizedBox(height: 20),
+                            if (imagePickerState.file !=
+                                null) // Only show if file exists
+                              Stack(
+                                children: [
+                                  ImageDesign(
+                                      imageFile:
+                                          File(imagePickerState.file!.path)),
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.close,
+                                          color: Colors.red),
+                                      onPressed: () {
+                                        context
+                                            .read<ImagePickerBloc>()
+                                            .add(ClearImageEvent());
+                                        print("ClearImageEvent dispatched");
+                                      },
                                     ),
-                                    onPressed: () => _selectDate(context),
                                   ),
                                 ],
                               ),
-                              CustomTextField(
-                                controller: _titleController,
-                                labelText: 'Task',
-                                hintText: 'Enter your task',
-                                icon: Icons.task,
-                              ),
-                              const SizedBox(height: 20),
-                              CustomTextField(
-                                controller: _descriptionController,
-                                labelText: 'Description',
-                                hintText: 'Enter task description',
-                                icon: Icons.description,
-                              ),
-
-                              const SizedBox(height: 20),
-                              const CustomDropdownButton(),
-
-
-                              const SizedBox(height: 20),
-
-                              if (imagePickerState.file != null)
-                                ImageDesign(imageFile: File(imagePickerState.file!.path)),
-
-                              const SizedBox(height: 25,),
-
-
-                              AddTaskButton(
-                                titleController: _titleController,
-                                descriptionController: _descriptionController,
-                                selectedDate: _selectedDate,
-                                image: imagePickerState.file?.path,
-                              ),
-                            ],
-                          ),
+                            const SizedBox(height: 25),
+                            AddTaskButton(
+                              titleController: _titleController,
+                              descriptionController: _descriptionController,
+                              selectedDate: _selectedDate,
+                              image: imagePickerState.file?.path,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  );
-                });
+                  ),
+                );
+              },
+            );
           },
         ),
       ),

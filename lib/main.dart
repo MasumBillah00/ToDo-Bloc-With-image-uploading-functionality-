@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
 import 'package:todoapptask/utilis/imagepicker_utilis.dart';
 import 'package:todoapptask/view/login_registration/login_screen/login_screen.dart';
+import 'package:todoapptask/view/todo_app_screen/task_add_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import 'bloc/forgot_password/forgot_password_bloc.dart';
 import 'bloc/imagepicker/imagepicker_bloc.dart';
@@ -18,7 +18,8 @@ void main() async {
 
   const defaultEmail = 'm.billahkst@gmail.com';
   const defaultPassword = '12345';
-  final existingUser = await databaseHelper.getUser(defaultEmail, defaultPassword);
+  final existingUser =
+      await databaseHelper.getUser(defaultEmail, defaultPassword);
   if (existingUser == null) {
     await databaseHelper.insertUser(defaultEmail, defaultPassword);
   }
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<RegistrationBloc>(
-          create: (context) => RegistrationBloc(databaseHelper: TodoDatabaseHelper(),
+          create: (context) => RegistrationBloc(
+            databaseHelper: TodoDatabaseHelper(),
           ),
         ),
         BlocProvider(
@@ -48,10 +50,13 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ForgotPasswordBloc(databaseHelper),
         ),
+        // BlocProvider(
+        //   create: (context) => ImagePickerBloc(ImagePickerUtils()),
+        // ),
         BlocProvider(
           create: (context) => ImagePickerBloc(ImagePickerUtils()),
-        ),
-
+         // child: TaskAddScreen(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -89,7 +94,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/login',
         routes: {
-          '/login': (context) => LoginScreen(),
+          '/login': (context) => ToDoAppScreen(),
           '/todo': (context) => ToDoAppScreen(),
         },
       ),
