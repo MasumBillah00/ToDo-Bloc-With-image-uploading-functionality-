@@ -100,7 +100,7 @@ class ImageDesign extends StatelessWidget {
   Widget build(BuildContext context) {
     // Determine which image source to use
     final file = imageFile ?? (item != null ? File(item!.image) : null);
-    final path = imagePath ?? (item != null ? item!.image : null);
+    final path = imagePath ?? (item?.image);
 
     return Container(
       height: 150,
