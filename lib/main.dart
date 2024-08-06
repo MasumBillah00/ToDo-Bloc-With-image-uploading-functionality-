@@ -4,7 +4,6 @@ import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
 import 'package:todoapptask/utilis/imagepicker_utilis.dart';
 import 'package:todoapptask/view/login_registration/login_screen/login_screen.dart';
-import 'package:todoapptask/view/todo_app_screen/task_add_screen.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import 'bloc/forgot_password/forgot_password_bloc.dart';
 import 'bloc/imagepicker/imagepicker_bloc.dart';
@@ -94,8 +93,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/login',
         routes: {
-          '/login': (context) => ToDoAppScreen(),
-          '/todo': (context) => ToDoAppScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/todo': (context) => const ToDoAppScreen(),
         },
       ),
     );
