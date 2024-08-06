@@ -4,12 +4,16 @@ import 'package:todoapptask/bloc/login/login_bloc.dart';
 import 'package:todoapptask/repository/todo_repository.dart';
 import 'package:todoapptask/utilis/imagepicker_utilis.dart';
 import 'package:todoapptask/view/login_registration/login_screen/login_screen.dart';
+import 'package:todoapptask/view/note/notetakingapp.dart';
 import 'package:todoapptask/view/todo_app_screen/todo_app_screen.dart';
 import 'bloc/forgot_password/forgot_password_bloc.dart';
 import 'bloc/imagepicker/imagepicker_bloc.dart';
+import 'bloc/note_bloc.dart';
+import 'bloc/note_event.dart';
 import 'bloc/registration/registration_bloc.dart';
 import 'bloc/todoappbloc/todoapp_bloc.dart';
 import 'database_helper/database_helper.dart';
+import 'database_helper/note_database.dart'; // Import your DatabaseProvider
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,18 +22,21 @@ void main() async {
   const defaultEmail = 'm.billahkst@gmail.com';
   const defaultPassword = '12345';
   final existingUser =
-      await databaseHelper.getUser(defaultEmail, defaultPassword);
+  await databaseHelper.getUser(defaultEmail, defaultPassword);
   if (existingUser == null) {
     await databaseHelper.insertUser(defaultEmail, defaultPassword);
   }
 
-  runApp(MyApp(databaseHelper));
+  final noteDatabaseProvider = DatabaseProvider(); // Initialize the notes database provider
+
+  runApp(MyApp(databaseHelper, noteDatabaseProvider));
 }
 
 class MyApp extends StatelessWidget {
   final TodoDatabaseHelper databaseHelper;
+  final DatabaseProvider noteDatabaseProvider;
 
-  const MyApp(this.databaseHelper, {super.key});
+  const MyApp(this.databaseHelper, this.noteDatabaseProvider, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +56,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ForgotPasswordBloc(databaseHelper),
         ),
-        // BlocProvider(
-        //   create: (context) => ImagePickerBloc(ImagePickerUtils()),
-        // ),
         BlocProvider(
           create: (context) => ImagePickerBloc(ImagePickerUtils()),
-         // child: TaskAddScreen(),
-        )
+        ),
+        BlocProvider<NoteBloc>(
+          create: (_) => NoteBloc(noteDatabaseProvider)..add(LoadNotes()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -95,6 +101,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginScreen(),
           '/todo': (context) => const ToDoAppScreen(),
+          '/notes': (context) => NoteListPage(),
+          '/noteDetail': (context) => NoteDetailPage(),
         },
       ),
     );

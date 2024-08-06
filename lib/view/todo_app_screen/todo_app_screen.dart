@@ -9,6 +9,7 @@ import '../../bloc/todoappbloc/todoapp_event.dart';
 import '../../bloc/todoappbloc/todoapp_state.dart';
 import '../component/allert_dialog.dart';
 import '../component/image_design.dart';
+import '../note/notetakingapp.dart';
 import '../todo_app_widget/icon_button_widget.dart';
 import '../login_registration/login_screen/login_screen.dart';
 import '../todo_app_widget/button_widget.dart';
@@ -167,6 +168,7 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
         );
       default:
         return const Center(child: CircularProgressIndicator());
+
     }
 
   },
@@ -190,6 +192,44 @@ class _ToDoAppScreenState extends State<ToDoAppScreen> {
               ),
             ),
             centerTitle: true,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const NoteListPage(),
+                    ),
+                  );
+                },
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Note',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white, // Customize color to match your theme
+                        ),
+                      ),
+                      WidgetSpan(
+                        alignment: PlaceholderAlignment.top,
+                        child: Transform.translate(
+                          offset: const Offset(2, -4),
+                          child: Text(
+                            '+',
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.white, // Customize color to match your theme
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            ],
           )
               : null,
           drawer: ToDo_Drawer(onItemTapped: _onItemTapped),
